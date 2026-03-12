@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ciberseguridad DAW</title>
+  <style>
+    :root {
+      --bg: #081120;
+      --bg-soft: #0f1b33;
+      --card: rgba(18, 30, 56, 0.9);
+      --line: rgba(126, 231, 255, 0.18);
+      --text: #eaf4ff;
+      --muted: #a8bdd8;
+      --primary: #4fd1ff;
+      --primary-2: #7c5cff;
+      --ok: #54f0a5;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(79, 209, 255, 0.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(124, 92, 255, 0.12), transparent 25%),
+        linear-gradient(180deg, #050b16 0%, var(--bg) 45%, #050b16 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.35;
+      z-index: 0;
+    }
+
+    .hero::before {
+      width: 280px;
+      height: 280px;
+      background: var(--primary);
+      top: 8%;
+      left: -80px;
+    }
+
+    .hero::after {
+      width: 320px;
+      height: 320px;
+      background: var(--primary-2);
+      bottom: 4%;
+      right: -100px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 32px;
+      align-items: center;
+      width: 100%;
+      padding: 48px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(79, 209, 255, 0.08);
+      color: var(--primary);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+      letter-spacing: 0.4px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 4.4rem);
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 650px;
+      font-size: 1.05rem;
+      margin-bottom: 28px;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 20px;
+      border-radius: 14px;
+      font-weight: bold;
+      transition: 0.25s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #06111f;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(79, 209, 255, 0.18);
+    }
+
+    .btn-secondary {
+      border-color: var(--line);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      border-color: rgba(79, 209, 255, 0.45);
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, rgba(17, 30, 56, 0.95), rgba(8, 18, 34, 0.95));
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(79,209,255,0.08), transparent 45%, rgba(124,92,255,0.12));
+      pointer-events: none;
+    }
+
+    .terminal {
+      position: relative;
+      z-index: 1;
+      font-family: Consolas, monospace;
+      color: #d7f5ff;
+      font-size: 0.96rem;
+    }
+
+    .terminal .line {
+      margin: 10px 0;
+    }
+
+    .terminal .ok {
+      color: var(--ok);
+    }
+
+    .terminal .accent {
+      color: var(--primary);
+    }
+
+    .section {
+      padding: 80px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      margin-bottom: 10px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(79, 209, 255, 0.45);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .units {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+    }
+
+    .unit-card {
+      background: linear-gradient(180deg, rgba(12,24,45,0.95), rgba(8,17,32,0.95));
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .unit-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .unit-tag {
+      font-size: 0.85rem;
+      color: var(--primary);
+      background: rgba(79, 209, 255, 0.08);
+      border: 1px solid var(--line);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .status {
+      font-size: 0.82rem;
+      color: #06111f;
+      background: var(--ok);
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-weight: bold;
+    }
+
+    .status.pending {
+      background: #ffd166;
+      color: #2f2500;
+    }
+
+    .unit-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.35rem;
+    }
+
+    .unit-card p {
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .unit-card ul {
+      list-style: none;
+      margin-bottom: 18px;
+    }
+
+    .unit-card li {
+      color: var(--text);
+      padding-left: 18px;
+      position: relative;
+      margin: 8px 0;
+      font-size: 0.96rem;
+    }
+
+    .unit-card li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+    }
+
+    .footer {
+      padding: 28px 0 40px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .mini-note {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-left: 3px solid var(--primary);
+      background: rgba(79,209,255,0.06);
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero-content,
+      .grid,
+      .units {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 40px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .cta-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .card,
+      .unit-card,
+      .hero-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero-content">
+      <div>
+        <span class="badge">DAW · Ciberseguridad · Apuntes para estudiar</span>
+        <h1>Portal de estudio de <span style="color: var(--primary);">Ciberseguridad</span></h1>
+        <p>
+          Web personal para organizar el temario, resumir cada unidad, practicar con tests y estudiar desde el móvil con GitHub Pages.
+        </p>
+        <div class="cta-group">
+          <a class="btn btn-primary" href="#unidades">Ver unidades</a>
+          <a class="btn btn-secondary" href="#estructura">Cómo está organizado</a>
+        </div>
+        <div class="mini-note">
+          Empieza por <strong>UF1</strong>: resumen visual, esquema de memorización y cuestionario de lo más importante.
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="terminal">
+          <div class="line"><span class="accent">&gt;</span> inicializando repositorio <span class="ok">OK</span></div>
+          <div class="line"><span class="accent">&gt;</span> cargando apuntes de ciberseguridad...</div>
+          <div class="line"><span class="accent">&gt;</span> módulos detectados: <span class="ok">UF1</span>, UF2, UF3, UF4</div>
+          <div class="line"><span class="accent">&gt;</span> modo estudio: <span class="ok">ACTIVO</span></div>
+          <div class="line"><span class="accent">&gt;</span> acceso móvil vía GitHub Pages <span class="ok">LISTO</span></div>
+          <div class="line"><span class="accent">&gt;</span> siguiente paso: crear <span class="ok">uf1.html</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="estructura">
+      <div class="container">
+        <div class="section-title">
+          <h2>Estructura de la web</h2>
+          <p>Diseñada para repasar rápido, memorizar mejor y tener todo el temario accesible desde cualquier dispositivo.</p>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <h3>Resumen claro</h3>
+            <p>Cada unidad tendrá una explicación sencilla, directa y enfocada a examen.</p>
+          </article>
+          <article class="card">
+            <h3>Esquema visual</h3>
+            <p>Bloques cortos y organizados para memorizar conceptos clave en pocos minutos.</p>
+          </article>
+          <article class="card">
+            <h3>Test de repaso</h3>
+            <p>Preguntas tipo examen para practicar lo que más suele preguntar el profesor.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="unidades">
+      <div class="container">
+        <div class="section-title">
+          <h2>Unidades formativas</h2>
+          <p>Página principal del repositorio. Desde aquí podrás entrar a cada unidad cuando la vayas creando.</p>
+        </div>
+
+        <div class="units">
+          <article class="unit-card">
+            <div class="unit-top">
+              <span class="unit-tag">UF1</span>
+              <span class="status">En construcción</span>
+            </div>
+            <h3>Seguridad física, lógica y continuidad</h3>
+            <p>Primera unidad del temario. Será la primera que montaremos en la web.</p>
+            <ul>
+              <li>Esquema visual de memorización</li>
+              <li>Resumen de conceptos clave</li>
+              <li>Test centrado en lo más preguntado</li>
+            </ul>
+            <a class="btn btn-secondary" href="uf1.html">Ir a UF1</a>
+          </article>
+
+          <article class="unit-card">
+            <div class="unit-top">
+              <span class="unit-tag">UF2 · UF3 · UF4</span>
+              <span class="status pending">Pendiente</span>
+            </div>
+            <h3>Resto del temario</h3>
+            <p>Aquí irás añadiendo las siguientes unidades con el mismo formato para estudiar mejor desde el móvil.</p>
+            <ul>
+              <li>Páginas separadas por unidad</li>
+              <li>Mismo diseño visual</li>
+              <li>Contenido adaptado a examen</li>
+            </ul>
+            <a class="btn btn-secondary" href="#">Próximamente</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Proyecto personal de estudio · Ciberseguridad DAW · GitHub Pages</p>
+    </div>
+  </footer>
+</body>
+</html>
