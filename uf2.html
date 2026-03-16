@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UF2 - Ciberseguridad DAW</title>
+    <style>
+        :root {
+            --bg: #081120;
+            --bg-soft: #0f1b33;
+            --card: rgba(18, 30, 56, 0.95);
+            --line: rgba(126, 231, 255, 0.18);
+            --text: #eaf4ff;
+            --muted: #a8bdd8;
+            --primary: #4fd1ff;
+            --primary-2: #7c5cff;
+            --ok: #54f0a5;
+            --warn: #ffd166;
+            --bad: #ff6b6b;
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(79, 209, 255, 0.12), transparent 30%),
+                radial-gradient(circle at top right, rgba(124, 92, 255, 0.12), transparent 25%),
+                linear-gradient(180deg, #050b16 0%, var(--bg) 45%, #050b16 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1100px, 92%);
+            margin: 0 auto;
+        }
+
+        header {
+            padding: 60px 0 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.35;
+            z-index: 0;
+        }
+
+        header::before {
+            width: 260px;
+            height: 260px;
+            background: var(--primary);
+            top: 0;
+            left: -70px;
+        }
+
+        header::after {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-2);
+            top: 20px;
+            right: -90px;
+        }
+
+        .hero {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(79, 209, 255, 0.08);
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.06;
+            margin-bottom: 14px;
+        }
+
+        .hero p {
+            color: var(--muted);
+            margin-bottom: 24px;
+            max-width: 680px;
+        }
+
+        .cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 20px;
+            border-radius: 14px;
+            font-weight: bold;
+            transition: 0.25s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: #06111f;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(79, 209, 255, 0.18);
+        }
+
+        .btn-secondary {
+            border-color: var(--line);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            border-color: rgba(79, 209, 255, 0.45);
+        }
+
+        .panel {
+            background: linear-gradient(180deg, rgba(17, 30, 56, 0.95), rgba(8, 18, 34, 0.95));
+            border: 1px solid var(--line);
+            border-radius: 26px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .mini-terminal {
+            font-family: Consolas, monospace;
+            color: #d7f5ff;
+            font-size: 0.95rem;
+        }
+
+        .mini-terminal .line {
+            margin: 10px 0;
+        }
+
+        .accent {
+            color: var(--primary);
+        }
+
+        .ok {
+            color: var(--ok);
+        }
+
+        .section {
+            padding: 70px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .section-title h2 {
+            font-size: clamp(1.7rem, 3vw, 2.7rem);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: var(--muted);
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .summary-grid,
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .card p,
+        .card li {
+            color: var(--muted);
+            font-size: 0.98rem;
+        }
+
+        .card ul {
+            margin-left: 18px;
+            margin-top: 10px;
+        }
+
+        .memory-box {
+            background: linear-gradient(180deg, rgba(12, 24, 45, 0.95), rgba(8, 17, 32, 0.95));
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .memory-box h3 {
+            color: var(--primary);
+            margin-bottom: 14px;
+            font-size: 1.18rem;
+        }
+
+        .memory-box ul {
+            list-style: none;
+        }
+
+        .memory-box li {
+            margin: 10px 0;
+            color: var(--text);
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .memory-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .highlight {
+            color: var(--warn);
+            font-weight: bold;
+        }
+
+        .note {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-left: 3px solid var(--primary);
+            background: rgba(79, 209, 255, 0.06);
+            border-radius: 10px;
+            color: var(--muted);
+        }
+
+        .quiz-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 24px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .quiz-status {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .question-card {
+            background: linear-gradient(180deg, rgba(12, 24, 45, 0.96), rgba(8, 17, 32, 0.96));
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 22px;
+        }
+
+        .question-number {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            color: var(--primary);
+            background: rgba(79, 209, 255, 0.08);
+            font-size: 0.88rem;
+        }
+
+        .question-title {
+            font-size: 1.08rem;
+            margin-bottom: 16px;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            display: block;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 14px 16px;
+            transition: 0.2s ease;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            border-color: rgba(79, 209, 255, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .option input {
+            margin-right: 10px;
+            accent-color: var(--primary);
+        }
+
+        .feedback {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: none;
+            font-size: 0.96rem;
+        }
+
+        .feedback.correct {
+            display: block;
+            background: rgba(84, 240, 165, 0.12);
+            border: 1px solid rgba(84, 240, 165, 0.35);
+            color: #d8ffe9;
+        }
+
+        .feedback.incorrect {
+            display: block;
+            background: rgba(255, 107, 107, 0.12);
+            border: 1px solid rgba(255, 107, 107, 0.35);
+            color: #ffe4e4;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            background: linear-gradient(180deg, rgba(17, 30, 56, 0.98), rgba(8, 18, 34, 0.98));
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .result-box h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .result-box p {
+            color: var(--muted);
+            margin: 8px 0;
+        }
+
+        footer {
+            padding: 24px 0 40px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 900px) {
+            .hero,
+            .summary-grid,
+            .memory-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .cta-group,
+            .quiz-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .panel,
+            .card,
+            .memory-box,
+            .question-card,
+            .result-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container hero">
+            <div>
+                <span class="badge">UF2 · Ciberseguridad · DAW</span>
+                <h1>Gestión de almacenamiento y copias de seguridad</h1>
+                <p>
+                    Página de estudio de la UF2 con resumen claro, esquema visual de memorización
+                    y test final de 55 preguntas para practicar desde el móvil.
+                </p>
+                <div class="cta-group">
+                    <a href="#resumen" class="btn btn-primary">Ver resumen</a>
+                    <a href="#test" class="btn btn-secondary">Ir al test</a>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="mini-terminal">
+                    <div class="line"><span class="accent">&gt;</span> cargando unidad <span class="ok">UF2</span></div>
+                    <div class="line"><span class="accent">&gt;</span> temas clave: SSD, NVMe, RAID, backup, 3-2-1</div>
+                    <div class="line"><span class="accent">&gt;</span> almacenamiento offline: <span class="ok">más seguro ante ransomware</span></div>
+                    <div class="line"><span class="accent">&gt;</span> backup crítico: <span class="ok">restaurar datos tras desastre</span></div>
+                    <div class="line"><span class="accent">&gt;</span> modo examen: <span class="ok">ACTIVO</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="section" id="resumen">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Resumen claro de la UF2</h2>
+                    <p>
+                        Aquí tienes lo más importante del tema explicado de forma sencilla y pensada para examen.
+                    </p>
+                </div>
+
+                <div class="summary-grid">
+                    <article class="card">
+                        <h3>1.1 Dispositivos de almacenamiento</h3>
+                        <p>Los dispositivos de almacenamiento guardan información de forma permanente. Se diferencian de la RAM, que pierde los datos al apagar el equipo.</p>
+                        <ul>
+                            <li>Jerarquía: registros → caché → RAM → almacenamiento secundario</li>
+                            <li>Tipos principales: HDD, SSD y NVMe</li>
+                            <li>NVMe es la opción más rápida actualmente</li>
+                            <li>La memoria virtual usa el disco como RAM cuando falta memoria</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>1.2 Almacenamiento terciario</h3>
+                        <p>Es un tercer nivel de almacenamiento pensado para grandes volúmenes de datos que se consultan poco.</p>
+                        <ul>
+                            <li>Más lento que el almacenamiento secundario</li>
+                            <li>Muy usado para archivado y backups a largo plazo</li>
+                            <li>Ejemplo clásico: bibliotecas de cintas</li>
+                            <li>Hoy se complementa con nube, NAS, SAN y almacenamiento en frío</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>1.3 Almacenamiento fuera de línea</h3>
+                        <p>No está conectado permanentemente al sistema y requiere intervención humana.</p>
+                        <ul>
+                            <li>Ejemplos: USB, discos externos desconectados, tarjetas y cintas</li>
+                            <li>Muy útil contra ransomware y accesos remotos</li>
+                            <li>Las unidades externas NVMe son las más rápidas</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>1.4 Almacenamiento en red</h3>
+                        <p>Los datos se guardan en servidores accesibles desde la red para varios usuarios.</p>
+                        <ul>
+                            <li>Ventajas: centralización, trabajo colaborativo y backups más fáciles</li>
+                            <li>Protocolos: NFS, SMB/Samba, iSCSI</li>
+                            <li>Tecnologías: NAS, SAN y nube</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>1.5 Sistemas RAID</h3>
+                        <p>RAID combina varios discos para mejorar velocidad, disponibilidad y tolerancia a fallos.</p>
+                        <ul>
+                            <li>RAID 0 → velocidad, sin redundancia</li>
+                            <li>RAID 1 → espejo</li>
+                            <li>RAID 5 → paridad, puede fallar 1 disco</li>
+                            <li>RAID 6 → doble paridad, pueden fallar 2 discos</li>
+                            <li>RAID 10 → velocidad + redundancia</li>
+                            <li><strong>Importante:</strong> RAID no sustituye al backup</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>2. Copias de seguridad</h3>
+                        <p>Un backup es un duplicado de datos importantes para poder recuperarlos tras un desastre, un borrado accidental o un ciberataque.</p>
+                        <ul>
+                            <li>Tipos: completa, incremental, diferencial, imagen del sistema, continua</li>
+                            <li>Medios: discos externos, NAS, SAN, nube, cintas</li>
+                            <li>Técnicas: compresión, deduplicación, cifrado, multiplexación</li>
+                            <li>Monitorización: logs, validación y checksums</li>
+                            <li>Regla 3-2-1 y 3-2-1-1 para protegerse del ransomware</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="memorizacion">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Esquema visual de memorización</h2>
+                    <p>Bloques rápidos para repasar antes del examen.</p>
+                </div>
+
+                <div class="memory-grid">
+                    <article class="memory-box">
+                        <h3>SSD y NVMe</h3>
+                        <ul>
+                            <li>SSD = más rápido que HDD</li>
+                            <li>NVMe = <span class="highlight">todavía más rápido</span></li>
+                            <li>Sin partes mecánicas</li>
+                            <li>Menor latencia y mejor rendimiento</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Almacenamiento terciario</h3>
+                        <ul>
+                            <li>Datos poco usados</li>
+                            <li>Archivado y backup masivo</li>
+                            <li><span class="highlight">Acceso lento</span></li>
+                            <li>Ejemplo clásico: cintas</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Offline vs Red</h3>
+                        <ul>
+                            <li><strong>Offline:</strong> no conectado, más seguro</li>
+                            <li><strong>En red:</strong> centralizado y compartido</li>
+                            <li>Offline protege mejor ante ataques remotos</li>
+                            <li>NAS y SAN son almacenamiento en red</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>RAID</h3>
+                        <ul>
+                            <li><span class="highlight">0</span> = velocidad</li>
+                            <li><span class="highlight">1</span> = espejo</li>
+                            <li><span class="highlight">5</span> = 1 disco puede fallar</li>
+                            <li><span class="highlight">6</span> = 2 discos pueden fallar</li>
+                            <li><span class="highlight">10</span> = rápido + seguro</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Tipos de backup</h3>
+                        <ul>
+                            <li>Completa = copia todo</li>
+                            <li>Incremental = cambios desde última copia</li>
+                            <li>Diferencial = cambios desde última completa</li>
+                            <li>CDP = cambios <span class="highlight">en tiempo real</span></li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Optimización</h3>
+                        <ul>
+                            <li>Compresión = menos tamaño</li>
+                            <li>Deduplicación = elimina datos repetidos</li>
+                            <li>Cifrado = protege la confidencialidad</li>
+                            <li>El cifrado ralentiza el proceso</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Monitorización</h3>
+                        <ul>
+                            <li>Validar backups</li>
+                            <li>Revisar logs</li>
+                            <li>Usar hash/checksum</li>
+                            <li>Probar restauraciones</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Regla 3-2-1</h3>
+                        <ul>
+                            <li>3 copias de los datos</li>
+                            <li>2 medios de almacenamiento distintos</li>
+                            <li>1 copia fuera del sitio principal</li>
+                            <li>3-2-1-1 añade una copia <span class="highlight">inmutable u offline</span></li>
+                        </ul>
+                    </article>
+                </div>
+
+                <div class="note">
+                    <strong>Lo que más suele caer:</strong> diferencias RAM/almacenamiento, SSD vs NVMe, almacenamiento offline,
+                    NAS/SAN, RAID 0-1-5-6-10, tipos de backup, deduplicación, cifrado, monitorización y regla 3-2-1.
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="test">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Test final UF2 · 55 preguntas</h2>
+                    <p>Marca tus respuestas y pulsa el botón para corregir. Al final verás tu nota total.</p>
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn btn-primary" onclick="corregirTest()">Corregir test</button>
+                    <button class="btn btn-secondary" onclick="reiniciarTest()">Reiniciar</button>
+                    <div class="quiz-status">Total de preguntas: <strong>55</strong></div>
+                </div>
+
+                <form id="quizForm">
+                    <div id="quizContainer"></div>
+                </form>
+
+                <div class="result-box" id="resultBox">
+                    <h3>Resultado del test</h3>
+                    <p id="scoreText"></p>
+                    <p id="scoreMessage"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>UF2 · Ciberseguridad DAW · Página preparada para estudiar desde GitHub Pages</p>
+        </div>
+    </footer>
+
+    <script>
+        const preguntas = [
+            { bloque: "1.1 Almacenamiento", pregunta: "¿Qué característica diferencia principalmente la memoria interna (RAM) del almacenamiento externo?", opciones: { a: "La RAM es más barata que el almacenamiento externo", b: "La RAM solo guarda datos mientras el equipo tiene alimentación eléctrica", c: "El almacenamiento externo solo funciona con internet", d: "El almacenamiento externo es siempre más rápido que la RAM" }, correcta: "b", explicacion: "La RAM es volátil y pierde los datos al apagar el equipo." },
+            { bloque: "1.1 Almacenamiento", pregunta: "¿Cuál de los siguientes dispositivos de almacenamiento ofrece mayor velocidad de transferencia actualmente?", opciones: { a: "Disco duro HDD", b: "SSD SATA", c: "SSD NVMe", d: "CD/DVD" }, correcta: "c", explicacion: "Los NVMe son los más rápidos al conectarse por PCIe." },
+            { bloque: "1.1 Almacenamiento", pregunta: "¿Qué ocurre cuando el sistema utiliza memoria virtual?", opciones: { a: "El sistema convierte la RAM en disco duro", b: "El sistema utiliza parte del disco como si fuera memoria RAM", c: "El sistema duplica automáticamente la RAM física", d: "El sistema elimina los datos de la RAM para liberar espacio" }, correcta: "b", explicacion: "La memoria virtual usa el disco como apoyo cuando falta RAM." },
+            { bloque: "1.1 Almacenamiento", pregunta: "¿Por qué la memoria virtual reduce el rendimiento del sistema?", opciones: { a: "Porque el sistema elimina archivos importantes", b: "Porque el disco es más lento que la memoria RAM", c: "Porque la CPU deja de funcionar temporalmente", d: "Porque se desactiva la memoria caché" }, correcta: "b", explicacion: "El disco es mucho más lento que la RAM." },
+            { bloque: "1.2 Terciario", pregunta: "¿Para qué se utiliza principalmente el almacenamiento terciario?", opciones: { a: "Para ejecutar programas del sistema operativo", b: "Para almacenar datos que se utilizan muy frecuentemente", c: "Para guardar grandes cantidades de datos que se usan poco", d: "Para sustituir la memoria RAM" }, correcta: "c", explicacion: "Se usa para archivo y grandes volúmenes poco consultados." },
+            { bloque: "1.2 Terciario", pregunta: "¿Cuánto tiempo puede tardar aproximadamente el acceso a datos en un sistema de almacenamiento terciario?", opciones: { a: "Entre 3 y 30 segundos", b: "Entre 1 y 5 milisegundos", c: "Menos de 1 microsegundo", d: "Es instantáneo como la memoria RAM" }, correcta: "a", explicacion: "El acceso es mucho más lento que en SSD o RAM." },
+            { bloque: "1.2 Terciario", pregunta: "¿Qué tecnología actual ha sustituido muchas funciones del almacenamiento terciario tradicional?", opciones: { a: "Disquetes", b: "Almacenamiento en la nube", c: "Memoria caché", d: "BIOS" }, correcta: "b", explicacion: "La nube ha sustituido muchas funciones de archivado y backup remoto." },
+            { bloque: "1.2/1.4 NAS", pregunta: "¿Cuál de los siguientes sistemas de almacenamiento está diseñado para ofrecer almacenamiento compartido en red dentro de una empresa?", opciones: { a: "BIOS", b: "NAS", c: "Memoria RAM", d: "Caché L1" }, correcta: "b", explicacion: "Un NAS es almacenamiento conectado a red para varios usuarios." },
+            { bloque: "1.3 Offline", pregunta: "¿Qué caracteriza a los sistemas de almacenamiento fuera de línea?", opciones: { a: "Están conectados permanentemente a la red", b: "Requieren intervención humana para acceder a los datos", c: "Solo funcionan dentro de servidores", d: "Funcionan únicamente con memoria RAM" }, correcta: "b", explicacion: "El acceso requiere conectar físicamente el soporte." },
+            { bloque: "1.3 Offline", pregunta: "¿Por qué el almacenamiento fuera de línea ofrece mayor protección frente a ciberataques?", opciones: { a: "Porque tiene más capacidad de almacenamiento", b: "Porque no puede ser accedido remotamente cuando está desconectado", c: "Porque siempre utiliza cifrado automático", d: "Porque funciona sin sistema operativo" }, correcta: "b", explicacion: "Al estar desconectado no es accesible por red ni malware remoto." },
+            { bloque: "1.3 Offline", pregunta: "¿Cuál de los siguientes dispositivos es un ejemplo de almacenamiento fuera de línea?", opciones: { a: "Memoria caché del procesador", b: "Memoria RAM", c: "Memoria USB", d: "Registro del procesador" }, correcta: "c", explicacion: "Una memoria USB es un medio típico de almacenamiento offline." },
+            { bloque: "1.3 Offline", pregunta: "¿Cuál de estos dispositivos está diseñado para ofrecer altas velocidades de transferencia en almacenamiento externo?", opciones: { a: "CD/DVD", b: "Disquete", c: "Unidad externa NVMe", d: "Tarjeta SD antigua" }, correcta: "c", explicacion: "Las unidades NVMe externas son las más rápidas." },
+            { bloque: "1.4 Red", pregunta: "En un sistema de almacenamiento en red, ¿qué dispositivo se encarga de guardar los datos y gestionar el acceso?", opciones: { a: "Cliente", b: "Router", c: "Servidor", d: "Switch" }, correcta: "c", explicacion: "El servidor almacena y gestiona el acceso a los datos." },
+            { bloque: "1.4 Red", pregunta: "¿Cuál es una ventaja principal del almacenamiento en red?", opciones: { a: "Cada ordenador guarda todos los archivos localmente", b: "Solo un usuario puede acceder a los archivos", c: "Permite centralizar la información en un servidor", d: "Elimina la necesidad de una red" }, correcta: "c", explicacion: "Centraliza datos y facilita su administración." },
+            { bloque: "1.4 Red", pregunta: "¿Qué protocolo se utiliza en sistemas Linux/UNIX para compartir archivos en red?", opciones: { a: "BIOS", b: "NFS", c: "RAID", d: "USB" }, correcta: "b", explicacion: "NFS es un protocolo clásico de compartición de archivos en Linux/UNIX." },
+            { bloque: "1.4 Red", pregunta: "¿Qué dispositivo está diseñado específicamente para ofrecer almacenamiento en red para varios usuarios?", opciones: { a: "NAS", b: "RAM", c: "CPU", d: "Caché" }, correcta: "a", explicacion: "NAS significa Network Attached Storage." },
+            { bloque: "1.5 RAID", pregunta: "¿Cuál es el objetivo principal de un sistema RAID?", opciones: { a: "Aumentar la velocidad del procesador", b: "Combinar varios discos para mejorar rendimiento y seguridad", c: "Sustituir la memoria RAM", d: "Eliminar la necesidad de copias de seguridad" }, correcta: "b", explicacion: "RAID combina discos para mejorar disponibilidad, velocidad o redundancia." },
+            { bloque: "1.5 RAID", pregunta: "¿Cuál de los siguientes niveles RAID no ofrece redundancia de datos?", opciones: { a: "RAID 0", b: "RAID 1", c: "RAID 5", d: "RAID 6" }, correcta: "a", explicacion: "RAID 0 solo mejora velocidad, sin tolerancia a fallos." },
+            { bloque: "1.5 RAID", pregunta: "¿Qué técnica utiliza RAID 1 para proteger los datos?", opciones: { a: "Paridad", b: "Compresión", c: "Mirroring (duplicación de datos)", d: "Cifrado" }, correcta: "c", explicacion: "RAID 1 replica exactamente la información en otro disco." },
+            { bloque: "1.5 RAID", pregunta: "¿Cuál es el mínimo número de discos necesarios para configurar RAID 5?", opciones: { a: "2", b: "3", c: "4", d: "5" }, correcta: "b", explicacion: "RAID 5 necesita al menos 3 discos." },
+            { bloque: "2.1 Backups", pregunta: "¿Cuál es el objetivo principal de una copia de seguridad?", opciones: { a: "Aumentar la velocidad del sistema", b: "Recuperar los datos en caso de pérdida o desastre", c: "Sustituir la memoria RAM", d: "Mejorar el rendimiento de la CPU" }, correcta: "b", explicacion: "El backup sirve para recuperar información perdida o dañada." },
+            { bloque: "2.1 Backups", pregunta: "¿Cuál de estos medios de almacenamiento se sigue usando mucho para copias de seguridad a largo plazo en centros de datos?", opciones: { a: "Cintas magnéticas", b: "CD-ROM", c: "Disquete", d: "Memoria caché" }, correcta: "a", explicacion: "Las cintas siguen siendo muy usadas para archivo y backup masivo." },
+            { bloque: "2.1 Backups", pregunta: "¿Qué tipo de copia de seguridad solo copia los archivos que han cambiado desde la última copia?", opciones: { a: "Copia completa", b: "Copia incremental", c: "Copia óptica", d: "Copia espejo" }, correcta: "b", explicacion: "La incremental guarda solo los cambios desde la última copia." },
+            { bloque: "2.1 Backups", pregunta: "¿Qué técnica permite reducir el tamaño de los datos eliminando información redundante en una copia de seguridad?", opciones: { a: "RAID", b: "Deduplicación", c: "Fragmentación", d: "Paridad" }, correcta: "b", explicacion: "La deduplicación elimina datos repetidos." },
+            { bloque: "2.2 Gestión", pregunta: "¿Por qué las copias de seguridad deben realizarse de forma periódica?", opciones: { a: "Porque el sistema operativo lo exige", b: "Porque los datos cambian continuamente", c: "Porque aumentan la velocidad del ordenador", d: "Porque sustituyen la memoria RAM" }, correcta: "b", explicacion: "Los datos cambian y el backup debe mantenerse actualizado." },
+            { bloque: "2.2 Gestión", pregunta: "¿Qué medida de seguridad consiste en cifrar los datos de una copia de seguridad para que no puedan ser leídos por personas no autorizadas?", opciones: { a: "Compresión", b: "Encriptación", c: "Fragmentación", d: "Multiplexación" }, correcta: "b", explicacion: "El cifrado protege la confidencialidad del backup." },
+            { bloque: "2.2 Gestión", pregunta: "¿Qué problema puede producirse durante la creación de copias de seguridad si el sistema está muy activo?", opciones: { a: "El sistema puede experimentar una disminución del rendimiento", b: "El sistema aumenta automáticamente la memoria RAM", c: "Los discos duros se duplican", d: "La red se desconecta automáticamente" }, correcta: "a", explicacion: "El proceso de copia consume CPU, disco y red." },
+            { bloque: "2.2 Gestión", pregunta: "¿Qué práctica ayuda a evitar errores humanos al realizar copias de seguridad?", opciones: { a: "Desactivar el antivirus", b: "Planificación automatizada de backups", c: "Usar discos más grandes", d: "Reiniciar el sistema diariamente" }, correcta: "b", explicacion: "La automatización evita olvidos y da regularidad al proceso." },
+            { bloque: "2.3 Monitorización", pregunta: "¿Qué significa monitorizar un sistema de copias de seguridad?", opciones: { a: "Eliminar los backups antiguos", b: "Supervisar que las copias se realizan correctamente", c: "Aumentar el tamaño del disco duro", d: "Reducir la velocidad del sistema" }, correcta: "b", explicacion: "Monitorizar es comprobar que los backups se hacen y funcionan bien." },
+            { bloque: "2.3 Monitorización", pregunta: "¿Cómo se llaman los registros automáticos que generan los sistemas de backup para indicar qué ha ocurrido durante la copia?", opciones: { a: "Cookies", b: "Logs", c: "RAID", d: "Clústeres" }, correcta: "b", explicacion: "Los logs registran la actividad y los errores del proceso." },
+            { bloque: "2.3 Monitorización", pregunta: "¿Para qué se utiliza un hash o checksum en el proceso de monitorización?", opciones: { a: "Para aumentar la velocidad del backup", b: "Para verificar la integridad de los datos", c: "Para comprimir archivos", d: "Para crear nuevas copias de seguridad" }, correcta: "b", explicacion: "Sirve para verificar que los datos no se han alterado." },
+            { bloque: "2.3 Monitorización", pregunta: "¿Por qué es importante validar las copias de seguridad periódicamente?", opciones: { a: "Para aumentar la velocidad de la red", b: "Para asegurar que los datos pueden restaurarse correctamente", c: "Para reducir el tamaño de los archivos", d: "Para eliminar los logs del sistema" }, correcta: "b", explicacion: "Un backup vale si puede restaurarse correctamente." },
+            { bloque: "2.4 Diferencias", pregunta: "¿Cuál es el objetivo principal de una copia de seguridad (backup)?", opciones: { a: "Guardar datos para consulta histórica", b: "Recuperar datos en caso de pérdida", c: "Aumentar la velocidad del sistema", d: "Reducir el uso de memoria RAM" }, correcta: "b", explicacion: "El backup recupera datos perdidos, no solo los conserva." },
+            { bloque: "2.4 Diferencias", pregunta: "¿Para qué se utilizan principalmente los archivos históricos?", opciones: { a: "Para recuperar datos perdidos", b: "Para conservar información para consulta futura", c: "Para mejorar el rendimiento del sistema", d: "Para reemplazar las copias de seguridad" }, correcta: "b", explicacion: "Los archivos históricos se guardan para consulta futura." },
+            { bloque: "2.4 Diferencias", pregunta: "¿Cuál es el objetivo de los sistemas tolerantes a fallos?", opciones: { a: "Recuperar datos eliminados", b: "Evitar que el sistema deje de funcionar cuando ocurre un fallo", c: "Reducir el tamaño de los archivos", d: "Aumentar el almacenamiento del sistema" }, correcta: "b", explicacion: "Mantienen el servicio aunque falle un componente." },
+            { bloque: "2.4 Diferencias", pregunta: "¿Por qué los sistemas tolerantes a fallos no sustituyen a las copias de seguridad?", opciones: { a: "Porque aumentan la velocidad del sistema", b: "Porque solo evitan fallos de hardware, pero no protegen contra errores humanos o ciberataques", c: "Porque ocupan demasiado espacio", d: "Porque no utilizan discos duros" }, correcta: "b", explicacion: "La tolerancia a fallos no te protege frente a borrados o ransomware." },
+            { bloque: "2.5 Buenas prácticas", pregunta: "Según la regla 3-2-1 de copias de seguridad, ¿cuántas copias de los datos deben existir en total?", opciones: { a: "1", b: "2", c: "3", d: "4" }, correcta: "c", explicacion: "Original + dos copias de seguridad = 3 copias." },
+            { bloque: "2.5 Buenas prácticas", pregunta: "Según la regla 3-2-1, ¿qué significa el número 2?", opciones: { a: "Tener dos servidores", b: "Guardar las copias en dos tipos diferentes de almacenamiento", c: "Realizar dos copias cada día", d: "Utilizar dos sistemas operativos" }, correcta: "b", explicacion: "Hay que usar dos medios distintos para reducir riesgos." },
+            { bloque: "2.5 Buenas prácticas", pregunta: "¿Qué significa el 1 en la regla 3-2-1?", opciones: { a: "Tener una copia cifrada", b: "Guardar una copia fuera del sitio principal", c: "Usar un solo servidor", d: "Tener una sola copia de seguridad" }, correcta: "b", explicacion: "Una copia debe estar fuera del lugar principal." },
+            { bloque: "2.5 Buenas prácticas", pregunta: "¿Qué añade la regla 3-2-1-1 respecto a la regla 3-2-1?", opciones: { a: "Una copia adicional cifrada", b: "Una copia inmutable o aislada de la red", c: "Una copia más en el mismo servidor", d: "Una copia adicional en memoria RAM" }, correcta: "b", explicacion: "Añade protección frente a ransomware con una copia inmune a cambios." },
+
+            { bloque: "Test externo", pregunta: "¿Cuál de las siguientes es una desventaja significativa del almacenamiento en la nube para copias de seguridad?", opciones: { a: "Puede implicar problemas de privacidad y seguridad si no está encriptado adecuadamente", b: "Tiene una capacidad limitada frente a otros métodos de almacenamiento locales", c: "Requiere una conexión a Internet rápida y estable" }, correcta: "c", explicacion: "La nube depende mucho de una conexión buena para subir y restaurar datos." },
+            { bloque: "Test externo", pregunta: "¿Qué tipo de metadatos es esencial para recuperar un sistema completo?", opciones: { a: "Registro de eventos", b: "Permisos de archivos y ACL", c: "Esquema de particiones y configuración del sistema de archivos" }, correcta: "c", explicacion: "Sin particiones y sistema de archivos no se puede reconstruir el sistema correctamente." },
+            { bloque: "Test externo", pregunta: "¿Qué técnica se utiliza para optimizar el espacio de las copias de seguridad?", opciones: { a: "Eliminación de duplicaciones", b: "Encriptación previa", c: "Multiplexación" }, correcta: "a", explicacion: "La deduplicación ahorra mucho espacio eliminando bloques repetidos." },
+            { bloque: "Test externo", pregunta: "¿Qué es una instantánea de copia de seguridad?", opciones: { a: "Un duplicado completo del sistema en tiempo real", b: "Una congelación del sistema de archivos en un momento determinado", c: "Una copia en caliente de todos los datos del sistema" }, correcta: "b", explicacion: "Un snapshot captura el estado del sistema en un instante concreto." },
+            { bloque: "Test externo", pregunta: "¿Qué ventaja tiene el almacenamiento distribuido?", opciones: { a: "Reduce la velocidad de transferencia", b: "Elimina la necesidad de una red informática", c: "Facilita las copias de seguridad centralizadas" }, correcta: "c", explicacion: "Centraliza la gestión y facilita la protección de datos." },
+            { bloque: "Test externo", pregunta: "¿Cuál de las siguientes es una desventaja de la encriptación en las copias de seguridad?", opciones: { a: "Ocupa más espacio de almacenamiento", b: "Disminuye la velocidad del proceso", c: "Reduce la vida útil del dispositivo de almacenamiento" }, correcta: "b", explicacion: "El cifrado añade carga de CPU y hace el proceso más lento." },
+            { bloque: "Test externo", pregunta: "¿Qué define al almacenamiento en estado sólido (SSD)?", opciones: { a: "Su bajo coste comparado con los discos duros convencionales", b: "Su capacidad de almacenamiento superior", c: "Su mayor velocidad de transferencia" }, correcta: "c", explicacion: "La velocidad es la gran ventaja del SSD frente al HDD." },
+            { bloque: "Test externo", pregunta: "¿Cuál es el principal objetivo de las copias de seguridad?", opciones: { a: "Recuperar datos tras un desastre o pérdida accidental", b: "Evitar la redundancia en la información", c: "Mejorar el rendimiento del sistema" }, correcta: "a", explicacion: "El objetivo principal es recuperar datos ante pérdida o desastre." },
+            { bloque: "Test externo", pregunta: "¿Qué esquema de copia de seguridad registra todos los cambios en tiempo real?", opciones: { a: "Copia completa e incremental", b: "Protección continua de datos", c: "Cinta magnética con acceso rápido" }, correcta: "b", explicacion: "La protección continua de datos registra cambios en tiempo real." },
+            { bloque: "Test externo", pregunta: "¿Qué caracteriza a un sistema RAID de software?", opciones: { a: "Permite el intercambio en caliente de discos", b: "Requiere una tarjeta controladora dedicada", c: "Utiliza el procesador principal para los cálculos" }, correcta: "c", explicacion: "En RAID software, la CPU del sistema hace los cálculos." },
+            { bloque: "Test externo", pregunta: "¿Qué se requiere para implementar almacenamiento en red distribuido?", opciones: { a: "Un sistema operativo compatible y una red informática", b: "Un protocolo exclusivo para sistemas Windows", c: "Discos duros externos y acceso remoto" }, correcta: "a", explicacion: "Hace falta red y soporte del sistema operativo." },
+            { bloque: "Test externo", pregunta: "¿Cuál es la principal diferencia entre el almacenamiento secundario y el terciario?", opciones: { a: "La capacidad de almacenamiento", b: "La velocidad de transferencia de datos", c: "La necesidad de intervención humana en el terciario" }, correcta: "c", explicacion: "El terciario suele requerir intervención humana o sistemas robotizados." },
+            { bloque: "Test externo", pregunta: "¿Qué significa el término hot swapping?", opciones: { a: "Sustitución de un disco sin apagar el sistema", b: "Creación de copias de seguridad incrementales", c: "Configuración de RAID en caliente" }, correcta: "a", explicacion: "Hot swap es cambiar hardware sin apagar el sistema." },
+            { bloque: "Test externo", pregunta: "¿Cuál de los siguientes es un ejemplo típico de almacenamiento fuera de línea?", opciones: { a: "Un disco duro externo conectado por USB", b: "Un sistema NAS accesible por red", c: "Una memoria flash USB almacenada en un lugar seguro" }, correcta: "c", explicacion: "Offline significa que el soporte está desconectado y guardado." },
+            { bloque: "Test externo", pregunta: "¿Cuál de las siguientes es una ventaja clave de los sistemas de almacenamiento redundante (RAID)?", opciones: { a: "Permiten combinar diferentes tipos de almacenamiento en una misma unidad lógica", b: "Garantizan la disponibilidad de los datos incluso si falla uno de los discos", c: "Aumentan significativamente la velocidad de transferencia en todas las configuraciones" }, correcta: "b", explicacion: "La redundancia permite seguir trabajando si falla un disco." }
+        ];
+
+        function renderQuiz() {
+            const container = document.getElementById("quizContainer");
+            container.innerHTML = "";
+
+            preguntas.forEach((q, index) => {
+                const card = document.createElement("div");
+                card.className = "question-card";
+
+                let opcionesHTML = "";
+                for (const key in q.opciones) {
+                    opcionesHTML += `
+            <label class="option">
+              <input type="radio" name="q${index}" value="${key}">
+              <strong>${key})</strong> ${q.opciones[key]}
+            </label>
+          `;
+                }
+
+                card.innerHTML = `
+          <div class="question-number">Pregunta ${index + 1} · ${q.bloque}</div>
+          <div class="question-title">${q.pregunta}</div>
+          <div class="options">${opcionesHTML}</div>
+          <div class="feedback" id="feedback${index}"></div>
+        `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function corregirTest() {
+            let aciertos = 0;
+
+            preguntas.forEach((q, index) => {
+                const seleccionada = document.querySelector(`input[name="q${index}"]:checked`);
+                const feedback = document.getElementById(`feedback${index}`);
+
+                if (!seleccionada) {
+                    feedback.className = "feedback incorrect";
+                    feedback.innerHTML = `No has respondido esta pregunta. <br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
+                    return;
+                }
+
+                if (seleccionada.value === q.correcta) {
+                    aciertos++;
+                    feedback.className = "feedback correct";
+                    feedback.innerHTML = `✅ Correcta. <strong>Explicación:</strong> ${q.explicacion}`;
+                } else {
+                    feedback.className = "feedback incorrect";
+                    feedback.innerHTML = `❌ Incorrecta. <br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
+                }
+            });
+
+            const total = preguntas.length;
+            const nota = ((aciertos / total) * 10).toFixed(2);
+            const resultBox = document.getElementById("resultBox");
+            const scoreText = document.getElementById("scoreText");
+            const scoreMessage = document.getElementById("scoreMessage");
+
+            scoreText.innerHTML = `<strong>Aciertos:</strong> ${aciertos} de ${total} · <strong>Nota:</strong> ${nota}/10`;
+
+            if (aciertos >= 48) {
+                scoreMessage.textContent = "Muy bien. Llevas la UF2 muy fuerte para examen.";
+            } else if (aciertos >= 39) {
+                scoreMessage.textContent = "Buen nivel. Repasa los fallos y puedes sacar muy buena nota.";
+            } else if (aciertos >= 30) {
+                scoreMessage.textContent = "Vas bien, pero conviene repasar RAID, tipos de backup, almacenamiento en red y regla 3-2-1.";
+            } else {
+                scoreMessage.textContent = "Necesitas repasar más. Empieza por el esquema visual y vuelve a hacer el test.";
+            }
+
+            resultBox.style.display = "block";
+            resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        function reiniciarTest() {
+            document.getElementById("quizForm").reset();
+            document.querySelectorAll(".feedback").forEach(f => {
+                f.className = "feedback";
+                f.innerHTML = "";
+            });
+            document.getElementById("resultBox").style.display = "none";
+            window.scrollTo({ top: document.getElementById("test").offsetTop - 20, behavior: "smooth" });
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>

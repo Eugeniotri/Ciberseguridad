@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -149,7 +150,7 @@
 
     .btn-secondary {
       border-color: var(--line);
-      background: rgba(255,255,255,0.03);
+      background: rgba(255, 255, 255, 0.03);
       color: var(--text);
     }
 
@@ -172,7 +173,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(79,209,255,0.08), transparent 45%, rgba(124,92,255,0.12));
+      background: linear-gradient(135deg, rgba(79, 209, 255, 0.08), transparent 45%, rgba(124, 92, 255, 0.12));
       pointer-events: none;
     }
 
@@ -254,7 +255,7 @@
     }
 
     .unit-card {
-      background: linear-gradient(180deg, rgba(12,24,45,0.95), rgba(8,17,32,0.95));
+      background: linear-gradient(180deg, rgba(12, 24, 45, 0.95), rgba(8, 17, 32, 0.95));
       border: 1px solid var(--line);
       border-radius: 24px;
       padding: 24px;
@@ -334,13 +335,14 @@
       margin-top: 16px;
       padding: 14px 16px;
       border-left: 3px solid var(--primary);
-      background: rgba(79,209,255,0.06);
+      background: rgba(79, 209, 255, 0.06);
       border-radius: 10px;
       color: var(--muted);
       font-size: 0.95rem;
     }
 
     @media (max-width: 900px) {
+
       .hero-content,
       .grid,
       .units {
@@ -370,6 +372,7 @@
     }
   </style>
 </head>
+
 <body>
   <header class="hero">
     <div class="container hero-content">
@@ -377,14 +380,16 @@
         <span class="badge">DAW · Ciberseguridad · Apuntes para estudiar</span>
         <h1>Portal de estudio de <span style="color: var(--primary);">Ciberseguridad</span></h1>
         <p>
-          Web personal para organizar el temario, resumir cada unidad, practicar con tests y estudiar desde el móvil con GitHub Pages.
+          Web personal para organizar el temario, resumir cada unidad, practicar con tests y estudiar desde el móvil con
+          GitHub Pages.
         </p>
         <div class="cta-group">
           <a class="btn btn-primary" href="#unidades">Ver unidades</a>
           <a class="btn btn-secondary" href="#estructura">Cómo está organizado</a>
         </div>
         <div class="mini-note">
-          Empieza por <strong>UF1</strong>: resumen visual, esquema de memorización y cuestionario de lo más importante.
+          Empieza por <strong>UF1</strong> o entra ya en <strong>UF2</strong> para repasar almacenamiento y copias de
+          seguridad.
         </div>
       </div>
 
@@ -392,10 +397,13 @@
         <div class="terminal">
           <div class="line"><span class="accent">&gt;</span> inicializando repositorio <span class="ok">OK</span></div>
           <div class="line"><span class="accent">&gt;</span> cargando apuntes de ciberseguridad...</div>
-          <div class="line"><span class="accent">&gt;</span> módulos detectados: <span class="ok">UF1</span>, UF2, UF3, UF4</div>
+          <div class="line"><span class="accent">&gt;</span> módulos detectados: <span class="ok">UF1</span>, <span
+              class="ok">UF2</span>, UF3, UF4</div>
           <div class="line"><span class="accent">&gt;</span> modo estudio: <span class="ok">ACTIVO</span></div>
-          <div class="line"><span class="accent">&gt;</span> acceso móvil vía GitHub Pages <span class="ok">LISTO</span></div>
-          <div class="line"><span class="accent">&gt;</span> siguiente paso: crear <span class="ok">uf1.html</span></div>
+          <div class="line"><span class="accent">&gt;</span> acceso móvil vía GitHub Pages <span class="ok">LISTO</span>
+          </div>
+          <div class="line"><span class="accent">&gt;</span> páginas disponibles: <span class="ok">uf1.html</span> y
+            <span class="ok">uf2.html</span></div>
         </div>
       </div>
     </div>
@@ -406,7 +414,8 @@
       <div class="container">
         <div class="section-title">
           <h2>Estructura de la web</h2>
-          <p>Diseñada para repasar rápido, memorizar mejor y tener todo el temario accesible desde cualquier dispositivo.</p>
+          <p>Diseñada para repasar rápido, memorizar mejor y tener todo el temario accesible desde cualquier
+            dispositivo.</p>
         </div>
 
         <div class="grid">
@@ -437,10 +446,10 @@
           <article class="unit-card">
             <div class="unit-top">
               <span class="unit-tag">UF1</span>
-              <span class="status">En construcción</span>
+              <span class="status">Disponible</span>
             </div>
             <h3>Seguridad física, lógica y continuidad</h3>
-            <p>Primera unidad del temario. Será la primera que montaremos en la web.</p>
+            <p>Primera unidad del temario con resumen visual, esquema de memorización y test.</p>
             <ul>
               <li>Esquema visual de memorización</li>
               <li>Resumen de conceptos clave</li>
@@ -451,17 +460,17 @@
 
           <article class="unit-card">
             <div class="unit-top">
-              <span class="unit-tag">UF2 · UF3 · UF4</span>
-              <span class="status pending">Pendiente</span>
+              <span class="unit-tag">UF2</span>
+              <span class="status">Disponible</span>
             </div>
-            <h3>Resto del temario</h3>
-            <p>Aquí irás añadiendo las siguientes unidades con el mismo formato para estudiar mejor desde el móvil.</p>
+            <h3>Gestión de almacenamiento y copias de seguridad</h3>
+            <p>Segunda unidad del temario con resumen, esquema visual y test completo.</p>
             <ul>
-              <li>Páginas separadas por unidad</li>
-              <li>Mismo diseño visual</li>
-              <li>Contenido adaptado a examen</li>
+              <li>Dispositivos de almacenamiento y RAID</li>
+              <li>Copias de seguridad, monitorización y buenas prácticas</li>
+              <li>Test autocorregible para examen</li>
             </ul>
-            <a class="btn btn-secondary" href="#">Próximamente</a>
+            <a class="btn btn-secondary" href="uf2.html">Ir a UF2</a>
           </article>
         </div>
       </div>
@@ -474,4 +483,5 @@
     </div>
   </footer>
 </body>
+
 </html>
