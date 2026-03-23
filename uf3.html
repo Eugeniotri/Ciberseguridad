@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UF3 - Ciberseguridad DAW</title>
+    <style>
+        :root {
+            --bg: #081120;
+            --bg-soft: #0f1b33;
+            --card: rgba(18, 30, 56, 0.95);
+            --line: rgba(126, 231, 255, 0.18);
+            --text: #eaf4ff;
+            --muted: #a8bdd8;
+            --primary: #4fd1ff;
+            --primary-2: #7c5cff;
+            --ok: #54f0a5;
+            --warn: #ffd166;
+            --bad: #ff6b6b;
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(79, 209, 255, 0.12), transparent 30%),
+                radial-gradient(circle at top right, rgba(124, 92, 255, 0.12), transparent 25%),
+                linear-gradient(180deg, #050b16 0%, var(--bg) 45%, #050b16 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1100px, 92%);
+            margin: 0 auto;
+        }
+
+        header {
+            padding: 60px 0 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before,
+        header::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.35;
+            z-index: 0;
+        }
+
+        header::before {
+            width: 260px;
+            height: 260px;
+            background: var(--primary);
+            top: 0;
+            left: -70px;
+        }
+
+        header::after {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-2);
+            top: 20px;
+            right: -90px;
+        }
+
+        .hero {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(79, 209, 255, 0.08);
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.06;
+            margin-bottom: 14px;
+        }
+
+        .hero p {
+            color: var(--muted);
+            margin-bottom: 24px;
+            max-width: 680px;
+        }
+
+        .cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 20px;
+            border-radius: 14px;
+            font-weight: bold;
+            transition: 0.25s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: #06111f;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(79, 209, 255, 0.18);
+        }
+
+        .btn-secondary {
+            border-color: var(--line);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            border-color: rgba(79, 209, 255, 0.45);
+        }
+
+        .panel {
+            background: linear-gradient(180deg, rgba(17, 30, 56, 0.95), rgba(8, 18, 34, 0.95));
+            border: 1px solid var(--line);
+            border-radius: 26px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .mini-terminal {
+            font-family: Consolas, monospace;
+            color: #d7f5ff;
+            font-size: 0.95rem;
+        }
+
+        .mini-terminal .line {
+            margin: 10px 0;
+        }
+
+        .accent {
+            color: var(--primary);
+        }
+
+        .ok {
+            color: var(--ok);
+        }
+
+        .section {
+            padding: 70px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .section-title h2 {
+            font-size: clamp(1.7rem, 3vw, 2.7rem);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: var(--muted);
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .summary-grid,
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .card p,
+        .card li {
+            color: var(--muted);
+            font-size: 0.98rem;
+        }
+
+        .card ul {
+            margin-left: 18px;
+            margin-top: 10px;
+        }
+
+        .memory-box {
+            background: linear-gradient(180deg, rgba(12, 24, 45, 0.95), rgba(8, 17, 32, 0.95));
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .memory-box h3 {
+            color: var(--primary);
+            margin-bottom: 14px;
+            font-size: 1.18rem;
+        }
+
+        .memory-box ul {
+            list-style: none;
+        }
+
+        .memory-box li {
+            margin: 10px 0;
+            color: var(--text);
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .memory-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .highlight {
+            color: var(--warn);
+            font-weight: bold;
+        }
+
+        .note {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-left: 3px solid var(--primary);
+            background: rgba(79, 209, 255, 0.06);
+            border-radius: 10px;
+            color: var(--muted);
+        }
+
+        .quiz-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 24px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .quiz-status {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .question-card {
+            background: linear-gradient(180deg, rgba(12, 24, 45, 0.96), rgba(8, 17, 32, 0.96));
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 22px;
+        }
+
+        .question-number {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            color: var(--primary);
+            background: rgba(79, 209, 255, 0.08);
+            font-size: 0.88rem;
+        }
+
+        .question-title {
+            font-size: 1.08rem;
+            margin-bottom: 16px;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            display: block;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 14px 16px;
+            transition: 0.2s ease;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            border-color: rgba(79, 209, 255, 0.45);
+            transform: translateY(-1px);
+        }
+
+        .option input {
+            margin-right: 10px;
+            accent-color: var(--primary);
+        }
+
+        .feedback {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: none;
+            font-size: 0.96rem;
+        }
+
+        .feedback.correct {
+            display: block;
+            background: rgba(84, 240, 165, 0.12);
+            border: 1px solid rgba(84, 240, 165, 0.35);
+            color: #d8ffe9;
+        }
+
+        .feedback.incorrect {
+            display: block;
+            background: rgba(255, 107, 107, 0.12);
+            border: 1px solid rgba(255, 107, 107, 0.35);
+            color: #ffe4e4;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            background: linear-gradient(180deg, rgba(17, 30, 56, 0.98), rgba(8, 18, 34, 0.98));
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .result-box h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .result-box p {
+            color: var(--muted);
+            margin: 8px 0;
+        }
+
+        footer {
+            padding: 24px 0 40px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 900px) {
+
+            .hero,
+            .summary-grid,
+            .memory-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+
+            .cta-group,
+            .quiz-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .panel,
+            .card,
+            .memory-box,
+            .question-card,
+            .result-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container hero">
+            <div>
+                <span class="badge">UF3 · Ciberseguridad · DAW</span>
+                <h1>Gestión de copias de seguridad</h1>
+                <p>
+                    Página de estudio de la UF3 con resumen claro, esquema visual de memorización
+                    y test final de 30 preguntas para practicar desde el móvil.
+                </p>
+                <div class="cta-group">
+                    <a href="#resumen" class="btn btn-primary">Ver resumen</a>
+                    <a href="#test" class="btn btn-secondary">Ir al test</a>
+                    <a href="index.html" class="btn btn-secondary">Volver al inicio</a>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="mini-terminal">
+                    <div class="line"><span class="accent">&gt;</span> cargando unidad <span class="ok">UF3</span></div>
+                    <div class="line"><span class="accent">&gt;</span> temas clave: completa, incremental, diferencial
+                    </div>
+                    <div class="line"><span class="accent">&gt;</span> regla 3-2-1: <span class="ok">ACTIVA</span></div>
+                    <div class="line"><span class="accent">&gt;</span> cifrado, compresión, restauración e imágenes
+                    </div>
+                    <div class="line"><span class="accent">&gt;</span> modo examen: <span class="ok">ACTIVO</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="section" id="resumen">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Resumen claro de la UF3</h2>
+                    <p>
+                        Aquí tienes lo más importante del tema explicado de forma sencilla y pensada para examen.
+                    </p>
+                </div>
+
+                <div class="summary-grid">
+                    <article class="card">
+                        <h3>1. Qué es una copia de seguridad</h3>
+                        <p>
+                            Una copia de seguridad o backup es una copia de los datos para poder recuperarlos
+                            si se pierden por fallo, borrado, malware, ransomware o desastre físico.
+                        </p>
+                        <ul>
+                            <li>Protege la información importante</li>
+                            <li>Permite recuperar datos perdidos</li>
+                            <li>Es clave para la continuidad del negocio</li>
+                            <li>Los datos son lo más importante del sistema</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>2. Tipos de copia según la información</h3>
+                        <p>
+                            Las más importantes para examen son la completa, la incremental y la diferencial.
+                        </p>
+                        <ul>
+                            <li><strong>Completa:</strong> copia todo</li>
+                            <li><strong>Incremental:</strong> copia cambios desde la última copia</li>
+                            <li><strong>Diferencial:</strong> copia cambios desde la última completa</li>
+                            <li><strong>Espejo:</strong> réplica exacta en tiempo real</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>3. Tipos de copia según cuándo se hacen</h3>
+                        <p>
+                            Las copias también se clasifican por el momento en que se ejecutan.
+                        </p>
+                        <ul>
+                            <li><strong>Periódicas:</strong> diarias, semanales o mensuales</li>
+                            <li><strong>En tiempo real:</strong> cambios instantáneos</li>
+                            <li><strong>Bajo demanda:</strong> manuales</li>
+                            <li><strong>Automáticas:</strong> programadas sin intervención humana</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>4. Cifrado de backups</h3>
+                        <p>
+                            El cifrado protege la confidencialidad de los datos y evita accesos no autorizados.
+                        </p>
+                        <ul>
+                            <li>Protege frente a robos y filtraciones</li>
+                            <li>Importante contra ransomware</li>
+                            <li>Puede aplicarse en origen, tránsito y reposo</li>
+                            <li>Herramientas: BitLocker, VeraCrypt, BorgBackup, Duplicati</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>5. Compresión</h3>
+                        <p>
+                            La compresión reduce el tamaño de los archivos para ahorrar espacio y facilitar
+                            el almacenamiento y la transmisión.
+                        </p>
+                        <ul>
+                            <li><strong>Sin pérdida:</strong> ZIP, RAR, 7z, PNG</li>
+                            <li><strong>Con pérdida:</strong> JPEG, MP3, MP4</li>
+                            <li>Primero se comprime y luego se cifra</li>
+                            <li>Ayuda a optimizar costes</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <h3>6. Política de copias de seguridad</h3>
+                        <p>
+                            Una política de copias define cómo, cuándo, dónde y quién realiza los backups.
+                        </p>
+                        <ul>
+                            <li>Frecuencia de copias</li>
+                            <li>Medios de almacenamiento</li>
+                            <li>Datos críticos, importantes y secundarios</li>
+                            <li>Documentación y pruebas de restauración</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="memorizacion">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Esquema visual de memorización</h2>
+                    <p>Bloques rápidos para repasar antes del examen.</p>
+                </div>
+
+                <div class="memory-grid">
+                    <article class="memory-box">
+                        <h3>Tipos de copia</h3>
+                        <ul>
+                            <li><strong>Completa:</strong> copia todo</li>
+                            <li><strong>Incremental:</strong> desde la última copia</li>
+                            <li><strong>Diferencial:</strong> desde la última completa</li>
+                            <li><strong>Espejo:</strong> copia exacta y en tiempo real</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Regla 3-2-1</h3>
+                        <ul>
+                            <li><span class="highlight">3</span> copias de los datos</li>
+                            <li><span class="highlight">2</span> medios distintos</li>
+                            <li><span class="highlight">1</span> copia fuera de las instalaciones</li>
+                            <li>Clave para recuperación ante desastres</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Cifrado</h3>
+                        <ul>
+                            <li>Evita accesos no autorizados</li>
+                            <li>Protege la confidencialidad</li>
+                            <li>Muy importante frente a robo de datos</li>
+                            <li>Herramientas típicas: BitLocker y VeraCrypt</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Compresión</h3>
+                        <ul>
+                            <li><span class="highlight">Sin pérdida:</span> no pierde datos</li>
+                            <li><span class="highlight">Con pérdida:</span> reduce calidad</li>
+                            <li>ZIP y PNG son sin pérdida</li>
+                            <li>JPEG y MP3 son con pérdida</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Restauración</h3>
+                        <ul>
+                            <li>Un backup sin probar puede fallar</li>
+                            <li>Hay que hacer pruebas de restauración</li>
+                            <li>También comprobar integridad de los datos</li>
+                            <li>La recuperación debe estar documentada</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Medios de almacenamiento</h3>
+                        <ul>
+                            <li>HDD y SSD</li>
+                            <li>NAS y SAN</li>
+                            <li>Cinta magnética</li>
+                            <li>Nube, USB y medios ópticos</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>Imágenes de respaldo</h3>
+                        <ul>
+                            <li>Copian sistema operativo, programas y datos</li>
+                            <li><strong>Hot imaging:</strong> con sistema encendido</li>
+                            <li><strong>Cold imaging:</strong> con sistema apagado</li>
+                            <li>Sirven para restaurar todo el sistema</li>
+                        </ul>
+                    </article>
+
+                    <article class="memory-box">
+                        <h3>P2V</h3>
+                        <ul>
+                            <li><strong>Physical to Virtual</strong></li>
+                            <li>Convierte una máquina física en virtual</li>
+                            <li>Útil para migraciones</li>
+                            <li>Mejora gestión y escalabilidad</li>
+                        </ul>
+                    </article>
+                </div>
+
+                <div class="note">
+                    <strong>Lo que más suele pillar el profesor:</strong> diferencia entre copia completa,
+                    incremental y diferencial; regla 3-2-1; cifrado; compresión sin pérdida y con pérdida;
+                    restauración; nube; ransomware; imágenes de respaldo; hot y cold imaging.
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="test">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Test final UF3 · 30 preguntas</h2>
+                    <p>Marca tus respuestas y pulsa el botón para corregir. Al final verás tu nota total.</p>
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn btn-primary" onclick="corregirTest()">Corregir test</button>
+                    <button class="btn btn-secondary" onclick="reiniciarTest()">Reiniciar</button>
+                    <div class="quiz-status">Total de preguntas: <strong>30</strong></div>
+                </div>
+
+                <form id="quizForm">
+                    <div id="quizContainer"></div>
+                </form>
+
+                <div class="result-box" id="resultBox">
+                    <h3>Resultado del test</h3>
+                    <p id="scoreText"></p>
+                    <p id="scoreMessage"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>UF3 · Ciberseguridad DAW · Página preparada para estudiar desde GitHub Pages</p>
+        </div>
+    </footer>
+
+    <script>
+        const preguntas = [
+            {
+                bloque: "Tipos de copia",
+                pregunta: "¿Qué tipo de copia de seguridad almacena solo los cambios desde la última copia completa?",
+                opciones: {
+                    a: "Copia incremental",
+                    b: "Copia diferencial",
+                    c: "Copia en espejo"
+                },
+                correcta: "b",
+                explicacion: "La diferencial guarda los cambios desde la última copia completa."
+            },
+            {
+                bloque: "Regla 3-2-1",
+                pregunta: "Según la regla 3-2-1, ¿cuántas copias de seguridad se deben tener en total?",
+                opciones: {
+                    a: "1",
+                    b: "2",
+                    c: "3"
+                },
+                correcta: "c",
+                explicacion: "La regla 3-2-1 indica 3 copias, 2 medios distintos y 1 copia fuera."
+            },
+            {
+                bloque: "Integridad",
+                pregunta: "¿Qué elemento ayuda a evitar la corrupción de los datos en copias de seguridad almacenadas en discos duros?",
+                opciones: {
+                    a: "Reducción del tamaño de los archivos copiados",
+                    b: "Pruebas de integridad y verificación de datos",
+                    c: "Desfragmentación del disco"
+                },
+                correcta: "b",
+                explicacion: "Las pruebas de integridad comprueban que la copia no se ha corrompido."
+            },
+            {
+                bloque: "Tipos de copia",
+                pregunta: "¿Qué tipo de copia de seguridad se actualiza en tiempo real con cada cambio en los archivos?",
+                opciones: {
+                    a: "Copia manual",
+                    b: "Copia diferencial",
+                    c: "Copia en espejo"
+                },
+                correcta: "c",
+                explicacion: "La copia en espejo replica los cambios en tiempo real."
+            },
+            {
+                bloque: "Imágenes de respaldo",
+                pregunta: "¿Cuál es la ventaja principal de una imagen de respaldo frente a una copia de seguridad tradicional?",
+                opciones: {
+                    a: "No necesita software adicional para su restauración",
+                    b: "Ocupa menos espacio en disco que una copia incremental",
+                    c: "Permite restaurar todo el sistema, incluyendo el sistema operativo y las configuraciones"
+                },
+                correcta: "c",
+                explicacion: "La imagen de respaldo permite restaurar el sistema completo."
+            },
+            {
+                bloque: "Recuperación ante desastres",
+                pregunta: "¿Cuál de los siguientes es un ejemplo de solución de recuperación ante desastres?",
+                opciones: {
+                    a: "Hacer copias solo en un USB",
+                    b: "Usar un solo disco duro externo para almacenar todos los datos",
+                    c: "Contar con copias de seguridad en diferentes ubicaciones"
+                },
+                correcta: "c",
+                explicacion: "La recuperación ante desastres exige copias en varias ubicaciones."
+            },
+            {
+                bloque: "Ransomware",
+                pregunta: "¿Cuál de estas opciones es una estrategia efectiva para evitar la pérdida de datos en caso de ransomware?",
+                opciones: {
+                    a: "Guardar todas las copias en la misma unidad de almacenamiento",
+                    b: "Mantener copias de seguridad desconectadas de la red",
+                    c: "Realizar solo copias en la nube sin cifrado"
+                },
+                correcta: "b",
+                explicacion: "Las copias offline o desconectadas son más seguras frente al ransomware."
+            },
+            {
+                bloque: "Virtualización",
+                pregunta: "¿Qué software se puede utilizar para realizar copias de seguridad en entornos virtuales?",
+                opciones: {
+                    a: "Adobe Photoshop",
+                    b: "VMware vCenter Converter",
+                    c: "Microsoft Excel"
+                },
+                correcta: "b",
+                explicacion: "VMware vCenter Converter está relacionado con virtualización y migración P2V."
+            },
+            {
+                bloque: "Compresión",
+                pregunta: "¿Qué herramienta permite comprimir las copias de seguridad para reducir el espacio en disco?",
+                opciones: {
+                    a: "Paint",
+                    b: "Microsoft Word",
+                    c: "WinRAR"
+                },
+                correcta: "c",
+                explicacion: "WinRAR sirve para comprimir archivos y reducir su tamaño."
+            },
+            {
+                bloque: "Objetivo del backup",
+                pregunta: "¿Cuál es el principal objetivo de una copia de seguridad?",
+                opciones: {
+                    a: "Mejorar la velocidad del sistema",
+                    b: "Reducir el consumo de energía del servidor",
+                    c: "Proteger los datos y garantizar su recuperación en caso de pérdida"
+                },
+                correcta: "c",
+                explicacion: "La misión de un backup es proteger y recuperar los datos."
+            },
+            {
+                bloque: "Restauración",
+                pregunta: "¿Por qué es importante realizar pruebas de restauración de las copias de seguridad?",
+                opciones: {
+                    a: "Para mejorar la velocidad del sistema operativo",
+                    b: "Para asegurarse de que los datos puedan recuperarse correctamente en caso de necesidad",
+                    c: "Para liberar espacio en el disco duro"
+                },
+                correcta: "b",
+                explicacion: "Hay que comprobar que la copia funciona y se puede restaurar."
+            },
+            {
+                bloque: "Cifrado",
+                pregunta: "¿Cuál de los siguientes métodos garantiza que un backup sea seguro frente a accesos no autorizados?",
+                opciones: {
+                    a: "Cifrar los archivos de la copia de seguridad",
+                    b: "Realizar copias en discos sin protección de acceso",
+                    c: "Almacenar todas las copias en la misma ubicación física"
+                },
+                correcta: "a",
+                explicacion: "El cifrado protege la confidencialidad del backup."
+            },
+            {
+                bloque: "Nube",
+                pregunta: "¿Qué ventaja ofrece almacenar copias de seguridad en la nube?",
+                opciones: {
+                    a: "Reduce la necesidad de usar discos duros en el servidor",
+                    b: "Permite recuperar datos desde cualquier ubicación",
+                    c: "Hace que las copias sean más rápidas"
+                },
+                correcta: "b",
+                explicacion: "La nube permite acceder y recuperar datos desde cualquier lugar con Internet."
+            },
+            {
+                bloque: "Automatización",
+                pregunta: "¿Qué tipo de copia de seguridad se ejecuta automáticamente sin intervención humana?",
+                opciones: {
+                    a: "Copia manual",
+                    b: "Copia en frío",
+                    c: "Copia automática"
+                },
+                correcta: "c",
+                explicacion: "La copia automática se programa y se ejecuta sola."
+            },
+            {
+                bloque: "Incremental",
+                pregunta: "¿Cuál de las siguientes es una de las principales desventajas de una copia incremental?",
+                opciones: {
+                    a: "La restauración puede ser más lenta, ya que depende de varias copias",
+                    b: "No permite recuperar archivos eliminados accidentalmente",
+                    c: "Necesita más espacio de almacenamiento que una copia completa"
+                },
+                correcta: "a",
+                explicacion: "La incremental ahorra espacio, pero la restauración es más compleja."
+            },
+            {
+                bloque: "Tipos de copia",
+                pregunta: "¿Qué tipo de copia ocupa más espacio de almacenamiento?",
+                opciones: {
+                    a: "Copia completa",
+                    b: "Copia incremental",
+                    c: "Copia diferencial"
+                },
+                correcta: "a",
+                explicacion: "La completa copia todos los datos cada vez."
+            },
+            {
+                bloque: "Compresión",
+                pregunta: "¿Qué tipo de compresión permite recuperar el archivo exactamente igual al original?",
+                opciones: {
+                    a: "Compresión con pérdida",
+                    b: "Compresión sin pérdida",
+                    c: "Compresión parcial"
+                },
+                correcta: "b",
+                explicacion: "La compresión sin pérdida conserva toda la información."
+            },
+            {
+                bloque: "Compresión y cifrado",
+                pregunta: "¿Qué se recomienda hacer primero al preparar una copia: comprimir o cifrar?",
+                opciones: {
+                    a: "Cifrar y luego comprimir",
+                    b: "Comprimir y luego cifrar",
+                    c: "Da igual el orden"
+                },
+                correcta: "b",
+                explicacion: "Primero se comprime y luego se cifra."
+            },
+            {
+                bloque: "Herramientas",
+                pregunta: "¿Cuál de estas herramientas viene integrada en Windows para cifrar unidades?",
+                opciones: {
+                    a: "BitLocker",
+                    b: "Paint",
+                    c: "Bloc de notas"
+                },
+                correcta: "a",
+                explicacion: "BitLocker es la herramienta integrada de Windows para cifrado."
+            },
+            {
+                bloque: "Frecuencia",
+                pregunta: "¿Qué tipo de copia es más apropiada para datos críticos que cambian mucho cada día?",
+                opciones: {
+                    a: "Copias diarias",
+                    b: "Copias anuales",
+                    c: "No hacer copias"
+                },
+                correcta: "a",
+                explicacion: "Los datos críticos requieren copias frecuentes, normalmente diarias."
+            },
+            {
+                bloque: "Rotación GFS",
+                pregunta: "En el esquema GFS, ¿qué representa la copia 'hijo'?",
+                opciones: {
+                    a: "Copia mensual",
+                    b: "Copia diaria",
+                    c: "Copia anual"
+                },
+                correcta: "b",
+                explicacion: "En GFS: hijo diaria, padre semanal, abuelo mensual."
+            },
+            {
+                bloque: "RAID",
+                pregunta: "¿Cuál de estas opciones NO sustituye a una copia de seguridad externa?",
+                opciones: {
+                    a: "RAID",
+                    b: "Backup externo",
+                    c: "Copia en la nube"
+                },
+                correcta: "a",
+                explicacion: "RAID da redundancia, pero no reemplaza a un backup."
+            },
+            {
+                bloque: "Medios",
+                pregunta: "¿Qué medio destaca por bajo coste por TB y larga duración, pero acceso secuencial lento?",
+                opciones: {
+                    a: "Cinta magnética",
+                    b: "Memoria RAM",
+                    c: "Monitor externo"
+                },
+                correcta: "a",
+                explicacion: "La cinta magnética tiene mucha capacidad y larga vida útil, pero acceso lento."
+            },
+            {
+                bloque: "P2V",
+                pregunta: "¿Qué significa P2V?",
+                opciones: {
+                    a: "Private to Virtual",
+                    b: "Physical to Virtual",
+                    c: "Program to Video"
+                },
+                correcta: "b",
+                explicacion: "P2V significa convertir una máquina física a virtual."
+            },
+            {
+                bloque: "Hot imaging",
+                pregunta: "¿Qué tipo de imagen de respaldo se crea con el sistema en funcionamiento?",
+                opciones: {
+                    a: "Cold imaging",
+                    b: "Hot imaging",
+                    c: "Imagen mensual"
+                },
+                correcta: "b",
+                explicacion: "Hot imaging se crea con el sistema encendido."
+            },
+            {
+                bloque: "Cold imaging",
+                pregunta: "¿Qué tipo de imagen ofrece mayor integridad de datos al hacerse con el sistema apagado?",
+                opciones: {
+                    a: "Imagen en frío",
+                    b: "Imagen incremental",
+                    c: "Imagen en espejo"
+                },
+                correcta: "a",
+                explicacion: "La imagen en frío se hace con el sistema apagado."
+            },
+            {
+                bloque: "Tipos de datos",
+                pregunta: "¿Cuál de estos datos suele considerarse de alta prioridad en una política de copias?",
+                opciones: {
+                    a: "Archivos temporales",
+                    b: "Bases de datos empresariales",
+                    c: "Aplicaciones descargables fáciles de recuperar"
+                },
+                correcta: "b",
+                explicacion: "Las bases de datos empresariales son datos críticos."
+            },
+            {
+                bloque: "Integridad",
+                pregunta: "¿Qué algoritmo o función se usa para comprobar la integridad de los datos?",
+                opciones: {
+                    a: "SHA-256",
+                    b: "JPEG",
+                    c: "AVI"
+                },
+                correcta: "a",
+                explicacion: "SHA-256 es una función hash usada para verificar la integridad."
+            },
+            {
+                bloque: "Formatos",
+                pregunta: "¿Qué tipo de compresión se usa en formatos como ZIP y PNG?",
+                opciones: {
+                    a: "Con pérdida",
+                    b: "Sin pérdida",
+                    c: "Cifrado asimétrico"
+                },
+                correcta: "b",
+                explicacion: "ZIP y PNG son formatos de compresión sin pérdida."
+            },
+            {
+                bloque: "USB",
+                pregunta: "¿Cuál es una desventaja de las memorias USB para copias de seguridad a largo plazo?",
+                opciones: {
+                    a: "Tienen vida útil reducida en ciclos de escritura",
+                    b: "No son portátiles",
+                    c: "No permiten copiar archivos"
+                },
+                correcta: "a",
+                explicacion: "Las memorias USB son cómodas, pero menos fiables a largo plazo."
+            }
+        ];
+
+        function renderQuiz() {
+            const container = document.getElementById("quizContainer");
+            container.innerHTML = "";
+
+            preguntas.forEach((q, index) => {
+                const card = document.createElement("div");
+                card.className = "question-card";
+
+                let opcionesHTML = "";
+                for (const key in q.opciones) {
+                    opcionesHTML += `
+            <label class="option">
+              <input type="radio" name="q${index}" value="${key}">
+              <strong>${key})</strong> ${q.opciones[key]}
+            </label>
+          `;
+                }
+
+                card.innerHTML = `
+          <div class="question-number">Pregunta ${index + 1} · ${q.bloque}</div>
+          <div class="question-title">${q.pregunta}</div>
+          <div class="options">${opcionesHTML}</div>
+          <div class="feedback" id="feedback${index}"></div>
+        `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function corregirTest() {
+            let aciertos = 0;
+
+            preguntas.forEach((q, index) => {
+                const seleccionada = document.querySelector(`input[name="q${index}"]:checked`);
+                const feedback = document.getElementById(`feedback${index}`);
+
+                if (!seleccionada) {
+                    feedback.className = "feedback incorrect";
+                    feedback.innerHTML = `No has respondido esta pregunta. <br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
+                    return;
+                }
+
+                if (seleccionada.value === q.correcta) {
+                    aciertos++;
+                    feedback.className = "feedback correct";
+                    feedback.innerHTML = `✅ Correcta. <strong>Explicación:</strong> ${q.explicacion}`;
+                } else {
+                    feedback.className = "feedback incorrect";
+                    feedback.innerHTML = `❌ Incorrecta. <br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
+                }
+            });
+
+            const total = preguntas.length;
+            const nota = ((aciertos / total) * 10).toFixed(2);
+            const resultBox = document.getElementById("resultBox");
+            const scoreText = document.getElementById("scoreText");
+            const scoreMessage = document.getElementById("scoreMessage");
+
+            scoreText.innerHTML = `<strong>Aciertos:</strong> ${aciertos} de ${total} · <strong>Nota:</strong> ${nota}/10`;
+
+            if (aciertos >= 26) {
+                scoreMessage.textContent = "Muy bien. Llevas la UF3 muy fuerte para examen.";
+            } else if (aciertos >= 21) {
+                scoreMessage.textContent = "Buen nivel. Repasa los fallos y puedes sacar muy buena nota.";
+            } else if (aciertos >= 15) {
+                scoreMessage.textContent = "Vas bien, pero conviene repasar tipos de copia, 3-2-1, cifrado y restauración.";
+            } else {
+                scoreMessage.textContent = "Necesitas repasar más. Empieza por el esquema visual y vuelve a hacer el test.";
+            }
+
+            resultBox.style.display = "block";
+            resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        function reiniciarTest() {
+            document.getElementById("quizForm").reset();
+            document.querySelectorAll(".feedback").forEach(f => {
+                f.className = "feedback";
+                f.innerHTML = "";
+            });
+            document.getElementById("resultBox").style.display = "none";
+            window.scrollTo({ top: document.getElementById("test").offsetTop - 20, behavior: "smooth" });
+        }
+
+        renderQuiz();
+    </script>
+</body>
+
+</html>
