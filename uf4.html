@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UF4 · Resumen ultrarrápido + Quiz</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --panel-2: #1f2937;
+            --text: #e5e7eb;
+            --muted: #94a3b8;
+            --ok: #16a34a;
+            --bad: #dc2626;
+            --accent: #38bdf8;
+            --warn: #f59e0b;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(180deg, #020617, #0f172a 35%, #111827);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin-top: 0;
+        }
+
+        .hero,
+        .card,
+        .question {
+            background: rgba(17, 24, 39, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+        }
+
+        .hero {
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            color: var(--muted);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+
+        .card {
+            padding: 18px;
+        }
+
+        .card h3 {
+            color: var(--accent);
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .card ul {
+            padding-left: 18px;
+            margin: 0;
+        }
+
+        .card li {
+            margin: 6px 0;
+        }
+
+        .section-title {
+            margin: 28px 0 14px;
+            font-size: 1.5rem;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .toolbar button {
+            background: var(--accent);
+            color: #082f49;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .toolbar button.secondary {
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .score {
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: #0b1220;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .question {
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        .question h3 {
+            font-size: 1.02rem;
+            margin-bottom: 12px;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            text-align: left;
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            background: #0b1220;
+            color: var(--text);
+            cursor: pointer;
+            transition: transform .08s ease, border-color .2s ease, background .2s ease;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-1px);
+            border-color: var(--accent);
+        }
+
+        .option-btn.correct {
+            background: rgba(22, 163, 74, 0.15);
+            border-color: var(--ok);
+        }
+
+        .option-btn.incorrect {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: var(--bad);
+        }
+
+        .feedback {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: #0b1220;
+            display: none;
+        }
+
+        .feedback.ok {
+            border-color: var(--ok);
+            color: #bbf7d0;
+            display: block;
+        }
+
+        .feedback.bad {
+            border-color: var(--bad);
+            color: #fecaca;
+            display: block;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: .8rem;
+            font-weight: 700;
+            background: rgba(56, 189, 248, .12);
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .footer-note {
+            margin-top: 24px;
+            color: var(--muted);
+            font-size: .95rem;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 14px;
+            }
+
+            .hero,
+            .card,
+            .question {
+                border-radius: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <section class="hero">
+            <span class="tag">UF4 · Seguridad activa</span>
+            <h1>Resumen ultrarrápido + quiz completo</h1>
+            <p>Repaso rápido para antes del examen y cuestionario interactivo. Al pulsar una respuesta, te indica si
+                está bien o cuál era la correcta.</p>
+        </section>
+
+        <h2 class="section-title">Resumen ultrarrápido de toda la UF4</h2>
+        <section class="grid">
+            <article class="card">
+                <h3>1. Seguridad activa</h3>
+                <ul>
+                    <li>Previene, detecta y responde a ataques.</li>
+                    <li>Herramientas: antivirus, firewall, IDS/IPS, actualizaciones, backups.</li>
+                    <li>Objetivo: reducir daños y recuperar el sistema rápido.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>2. Plan de contingencia</h3>
+                <ul>
+                    <li>Plan para actuar ante incidentes.</li>
+                    <li>Fases: evaluación, planificación, pruebas, ejecución y recuperación.</li>
+                    <li>Primer paso ante sospecha: aislar el equipo.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>3. Recuperación de datos</h3>
+                <ul>
+                    <li>La mejor solución es tener copias de seguridad.</li>
+                    <li>Un archivo borrado puede recuperarse si no se sobrescribe.</li>
+                    <li>RAID ayuda a evitar pérdidas por fallo de disco.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>4. Autenticidad e integridad</h3>
+                <ul>
+                    <li>Firma digital: autenticidad + integridad + no repudio.</li>
+                    <li>Hash: verifica que un archivo no ha sido modificado.</li>
+                    <li>MD5 ya no es seguro; mejor SHA-2 o SHA-3.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>5. Certificado digital</h3>
+                <ul>
+                    <li>Sirve para identificar a una persona o entidad en Internet.</li>
+                    <li>Lo emite una autoridad certificadora.</li>
+                    <li>Firma cualificada = mayor nivel de seguridad y validez legal.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>6. Nube y móviles</h3>
+                <ul>
+                    <li>Nube: MFA, cifrado, control de accesos, auditoría.</li>
+                    <li>Móvil: PIN/huella, apps oficiales, actualizaciones, borrado remoto.</li>
+                    <li>Evitar wifi pública sin protección o usar VPN.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>7. Señales de alerta</h3>
+                <ul>
+                    <li>IDS detecta; IPS detecta y bloquea.</li>
+                    <li>Señales: lentitud, reinicios, archivos raros, cambios de hora/fecha.</li>
+                    <li>Revisar visor de eventos, firewall y procesos en ejecución.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>8. Malware</h3>
+                <ul>
+                    <li>Virus: necesita huésped.</li>
+                    <li>Gusano: se replica solo por red.</li>
+                    <li>Troyano: se disfraza de programa legítimo.</li>
+                    <li>Spyware: espía y roba información.</li>
+                    <li>Ransomware: cifra archivos y pide rescate.</li>
+                    <li>Hoax: bulo, no es malware real.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>9. Entrada del malware</h3>
+                <ul>
+                    <li>USB, descargas, correos, webs maliciosas, software pirata, macros.</li>
+                    <li>No abrir .exe ni adjuntos sospechosos.</li>
+                    <li>Mostrar extensiones de archivo ayuda a detectar peligro.</li>
+                </ul>
+            </article>
+
+            <article class="card">
+                <h3>10. Antivirus y prevención</h3>
+                <ul>
+                    <li>Debe estar actualizado y con protección en tiempo real.</li>
+                    <li>Programar escaneos periódicos.</li>
+                    <li>Antivirus solo no basta: también firewall, actualizaciones y sentido común.</li>
+                </ul>
+            </article>
+        </section>
+
+        <h2 class="section-title">Quiz de repaso</h2>
+        <div class="toolbar">
+            <button id="showAnswersBtn" class="secondary">Mostrar soluciones</button>
+            <button id="resetBtn">Reiniciar quiz</button>
+            <div class="score" id="scoreBox">Aciertos: 0 / 40</div>
+        </div>
+
+        <div id="quiz"></div>
+
+        <p class="footer-note">Consejo final: si dominas este quiz, llegas muy bien al examen.</p>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: '¿Cuál de las siguientes herramientas se utiliza para detectar intrusiones en un sistema informático?',
+                options: ['Procesador de texto.', 'IDS (sistema de detección de intrusos).', 'Compresor de archivos.'],
+                correct: 1,
+                explanation: 'IDS significa sistema de detección de intrusos.'
+            },
+            {
+                text: '¿Qué indica un archivo adjunto con extensión .exe recibido por correo electrónico?',
+                options: ['Puede contener código malicioso y debe analizarse antes de abrirlo.', 'Solo funciona en sistemas operativos antiguos.', 'Es completamente seguro porque viene de un contacto conocido.'],
+                correct: 0,
+                explanation: 'Un .exe es un archivo ejecutable y puede contener malware.'
+            },
+            {
+                text: '¿Cuál de los siguientes es un tipo de software malicioso diseñado para replicarse automáticamente a través de redes?',
+                options: ['Troyano.', 'Rootkit.', 'Gusano (worm).'],
+                correct: 2,
+                explanation: 'El gusano se replica solo y se propaga automáticamente por la red.'
+            },
+            {
+                text: '¿Qué medida básica ayuda a proteger un sistema contra virus informáticos?',
+                options: ['Instalar un programa antivirus actualizado.', 'Desactivar el antivirus para mejorar el rendimiento.', 'Compartir contraseñas con otros usuarios de confianza.'],
+                correct: 0,
+                explanation: 'Un antivirus actualizado es una medida básica de defensa.'
+            },
+            {
+                text: '¿Qué acción ayuda a prevenir ataques por fuerza bruta?',
+                options: ['Configurar contraseñas complejas y seguras.', 'Compartir contraseñas con compañeros de trabajo.', 'Usar contraseñas fáciles de recordar.'],
+                correct: 0,
+                explanation: 'Las contraseñas robustas dificultan ataques por fuerza bruta.'
+            },
+            {
+                text: '¿Cuál de los siguientes términos se refiere a un software que se oculta para mantener el acceso no autorizado al sistema?',
+                options: ['Rootkit.', 'Ransomware.', 'Spyware.'],
+                correct: 0,
+                explanation: 'El rootkit se oculta y ayuda a mantener acceso no autorizado.'
+            },
+            {
+                text: '¿Cuál de estos elementos constituye un plan de contingencia ante un fallo de seguridad?',
+                options: ['Evaluar los riesgos y planificar acciones de recuperación.', 'Reiniciar el equipo sin análisis previo.', 'Ignorar alertas de seguridad menores.'],
+                correct: 0,
+                explanation: 'Un plan de contingencia incluye análisis de riesgos y recuperación.'
+            },
+            {
+                text: '¿Cuál de las siguientes herramientas forma parte de la seguridad activa?',
+                options: ['Editores de texto.', 'Programas antivirus.', 'Compiladores de software.'],
+                correct: 1,
+                explanation: 'El antivirus es una herramienta típica de seguridad activa.'
+            },
+            {
+                text: '¿Cuál de los siguientes comandos de Linux se utiliza para actualizar los paquetes del sistema?',
+                options: ['clear cache.', 'sudo format disk.', 'sudo apt update.'],
+                correct: 2,
+                explanation: 'sudo apt update actualiza la lista de paquetes disponibles.'
+            },
+            {
+                text: '¿Qué tipo de virus afecta principalmente a documentos de Microsoft Office mediante el uso de macros?',
+                options: ['Virus de acción directa.', 'Virus de sector de arranque.', 'Virus de macro.'],
+                correct: 2,
+                explanation: 'Los virus de macro afectan a documentos Office con macros.'
+            },
+            {
+                text: '¿Qué es un ataque de phishing?',
+                options: ['Un software que mejora la velocidad de conexión a Internet.', 'Un intento de obtener información confidencial mediante engaño.', 'Un tipo de virus que modifica el sector de arranque del disco.'],
+                correct: 1,
+                explanation: 'El phishing engaña al usuario para robar datos confidenciales.'
+            },
+            {
+                text: '¿Qué opción ayuda a prevenir la entrada de software malicioso en un sistema?',
+                options: ['Mantener el sistema operativo y las aplicaciones actualizadas.', 'Descargar software de fuentes desconocidas.', 'Desactivar el firewall para mejorar la velocidad de conexión.'],
+                correct: 0,
+                explanation: 'Las actualizaciones corrigen vulnerabilidades de seguridad.'
+            },
+            {
+                text: '¿Qué herramienta permite revisar los eventos de seguridad en un sistema operativo Windows?',
+                options: ['Bloc de notas.', 'Visor de eventos.', 'Calculadora.'],
+                correct: 1,
+                explanation: 'El Visor de eventos muestra registros del sistema y seguridad.'
+            },
+            {
+                text: '¿Qué acción es recomendable al detectar un comportamiento sospechoso en un equipo?',
+                options: ['Continuar trabajando normalmente para no perder productividad.', 'Reiniciar el sistema sin realizar un análisis.', 'Aislar el equipo de la red para evitar la propagación.'],
+                correct: 2,
+                explanation: 'El primer paso suele ser aislar el equipo para contener el incidente.'
+            },
+            {
+                text: '¿Qué característica no corresponde a un sistema operativo seguro?',
+                options: ['Configurar permisos de usuario de manera adecuada.', 'Permitir la ejecución de cualquier aplicación sin restricciones.', 'Mantenerlo actualizado con parches de seguridad.'],
+                correct: 1,
+                explanation: 'Permitir cualquier aplicación sin restricciones aumenta mucho el riesgo.'
+            },
+
+            {
+                text: '¿Qué define mejor la seguridad activa?',
+                options: ['Medidas para prevenir, detectar y responder a ataques.', 'Medidas que solo se aplican después del ataque.', 'Solo hacer copias de seguridad.'],
+                correct: 0,
+                explanation: 'La seguridad activa previene, detecta y responde.'
+            },
+            {
+                text: '¿Cuál es la primera acción ante un equipo posiblemente infectado?',
+                options: ['Cambiar el fondo de pantalla.', 'Aislarlo de la red.', 'Compartirlo con otros equipos.'],
+                correct: 1,
+                explanation: 'Aislarlo evita la propagación del ataque.'
+            },
+            {
+                text: '¿Qué herramienta controla el tráfico entrante y saliente según reglas de seguridad?',
+                options: ['Firewall.', 'Procesador de texto.', 'Desfragmentador.'],
+                correct: 0,
+                explanation: 'El firewall filtra el tráfico de red.'
+            },
+            {
+                text: '¿Qué son los backups?',
+                options: ['Copias de seguridad de datos y/o sistema.', 'Virus de arranque.', 'Protocolos de cifrado.'],
+                correct: 0,
+                explanation: 'Los backups permiten recuperar información si se pierde o daña.'
+            },
+            {
+                text: '¿Qué garantiza principalmente una firma digital?',
+                options: ['Autenticidad e integridad.', 'Mayor velocidad de descarga.', 'Más memoria RAM.'],
+                correct: 0,
+                explanation: 'La firma digital verifica origen e integridad del contenido.'
+            },
+            {
+                text: '¿Para qué sirve un hash?',
+                options: ['Para verificar la integridad de un archivo.', 'Para comprimir documentos.', 'Para acelerar Internet.'],
+                correct: 0,
+                explanation: 'El hash permite comprobar si un archivo ha sido modificado.'
+            },
+            {
+                text: '¿Qué algoritmo ya no se considera seguro para integridad criptográfica?',
+                options: ['SHA-2', 'MD5', 'SHA-3'],
+                correct: 1,
+                explanation: 'MD5 está obsoleto por sus vulnerabilidades.'
+            },
+            {
+                text: '¿Qué significa MFA?',
+                options: ['Autenticación multifactor.', 'Modo fácil de acceso.', 'Firewall manual avanzado.'],
+                correct: 0,
+                explanation: 'MFA requiere más de un factor de verificación.'
+            },
+            {
+                text: '¿Qué práctica es más segura en la nube?',
+                options: ['Usar MFA y cifrado.', 'Compartir la contraseña entre empleados.', 'Desactivar auditorías.'],
+                correct: 0,
+                explanation: 'MFA y cifrado mejoran mucho la seguridad en la nube.'
+            },
+            {
+                text: '¿Qué conviene evitar en dispositivos móviles?',
+                options: ['Instalar apps solo de tiendas oficiales.', 'Usar redes wifi públicas sin protección.', 'Bloquear el móvil con PIN o huella.'],
+                correct: 1,
+                explanation: 'Las wifi públicas abiertas son una vía frecuente de riesgo.'
+            },
+            {
+                text: '¿Qué hace un IPS?',
+                options: ['Detecta y además bloquea ataques.', 'Solo comprime archivos.', 'Hace copias de seguridad automáticas.'],
+                correct: 0,
+                explanation: 'El IPS previene, no solo detecta.'
+            },
+            {
+                text: '¿Qué tipo de registro se debe revisar en Windows ante sospechas de incidente?',
+                options: ['Visor de eventos.', 'Galería de imágenes.', 'Bloc de notas.'],
+                correct: 0,
+                explanation: 'El Visor de eventos muestra logs útiles para investigar.'
+            },
+            {
+                text: 'Si borras un archivo, ¿qué ocurre normalmente?',
+                options: ['Se destruye físicamente al instante.', 'Puede seguir en disco hasta ser sobrescrito.', 'Se convierte en ejecutable.'],
+                correct: 1,
+                explanation: 'Mientras no se sobrescriba, puede ser recuperable.'
+            },
+            {
+                text: '¿Cuál es la mejor defensa frente al ransomware?',
+                options: ['Tener copias de seguridad actualizadas.', 'Pagar siempre el rescate.', 'Desactivar el antivirus.'],
+                correct: 0,
+                explanation: 'Las copias de seguridad permiten recuperar los datos sin depender del rescate.'
+            },
+            {
+                text: '¿Qué caracteriza a un troyano?',
+                options: ['Se disfraza de software legítimo.', 'Se propaga solo por red.', 'Es un mensaje falso.'],
+                correct: 0,
+                explanation: 'El troyano engaña al usuario aparentando ser un programa normal.'
+            },
+            {
+                text: '¿Qué malware recopila información del usuario sin permiso?',
+                options: ['Spyware.', 'Firewall.', 'Hoax.'],
+                correct: 0,
+                explanation: 'El spyware espía y roba información.'
+            },
+            {
+                text: '¿Qué es un hoax?',
+                options: ['Un mensaje falso o bulo.', 'Un antivirus gratuito.', 'Un certificado digital.'],
+                correct: 0,
+                explanation: 'Un hoax es una falsa alarma, no un virus real.'
+            },
+            {
+                text: '¿Cuál de estas es una señal típica de posible infección?',
+                options: ['Aparición de archivos desconocidos.', 'Mejora espontánea del rendimiento.', 'Aumento del espacio libre tras instalar software.'],
+                correct: 0,
+                explanation: 'Archivos desconocidos o cambios extraños son señales de alerta.'
+            },
+            {
+                text: '¿Qué hay que hacer después de resolver una incidencia?',
+                options: ['Documentarla.', 'Olvidarla para no perder tiempo.', 'Desactivar la seguridad.'],
+                correct: 0,
+                explanation: 'Documentar ayuda a responder mejor en el futuro.'
+            },
+            {
+                text: '¿Qué tipo de firma electrónica tiene mayor validez legal?',
+                options: ['Simple.', 'Cualificada.', 'Manual escaneada.'],
+                correct: 1,
+                explanation: 'La firma cualificada es la de mayor nivel de seguridad y validez legal.'
+            },
+            {
+                text: '¿Qué tipo de cifrado usa clave pública y clave privada?',
+                options: ['Asimétrico.', 'Simétrico.', 'Plano.'],
+                correct: 0,
+                explanation: 'El cifrado asimétrico utiliza dos claves complementarias.'
+            },
+            {
+                text: '¿Qué malware cifra los archivos y pide dinero para recuperarlos?',
+                options: ['Ransomware.', 'Spyware.', 'Hoax.'],
+                correct: 0,
+                explanation: 'El ransomware secuestra los datos mediante cifrado.'
+            },
+            {
+                text: '¿Qué conviene hacer con macros de documentos desconocidos?',
+                options: ['No habilitarlas.', 'Activarlas siempre.', 'Ignorarlas y compartir el archivo.'],
+                correct: 0,
+                explanation: 'Las macros pueden ser una vía de infección.'
+            },
+            {
+                text: '¿Qué comando de Linux instala las actualizaciones disponibles tras actualizar la lista?',
+                options: ['sudo apt upgrade', 'sudo apt delete', 'sudo apt hide'],
+                correct: 0,
+                explanation: 'upgrade instala las versiones más recientes disponibles.'
+            },
+            {
+                text: '¿Cuál es la mejor fuente para descargar aplicaciones?',
+                options: ['Fuentes oficiales.', 'Cualquier foro aleatorio.', 'Archivos reenviados por desconocidos.'],
+                correct: 0,
+                explanation: 'Las fuentes oficiales reducen mucho el riesgo de malware.'
+            },
+            {
+                text: '¿Qué puede hacer un virus de arranque?',
+                options: ['Afectar al sector de arranque e impedir iniciar el sistema.', 'Mejorar el arranque del sistema.', 'Cifrar solo documentos Office.'],
+                correct: 0,
+                explanation: 'Los virus de arranque afectan al inicio del sistema operativo.'
+            },
+            {
+                text: '¿Qué nivel de propagación se considera epidemia?',
+                options: ['10 % o más.', 'Menos del 1 %.', 'Entre 1 % y 7,5 %.'],
+                correct: 0,
+                explanation: 'Epidemia significa una tasa de infección del 10 % o superior.'
+            },
+            {
+                text: '¿Qué conjunto de tres rasgos define de forma clásica al malware en el tema?',
+                options: ['Dañino, autorreproductor y subrepticio.', 'Rápido, bonito y visible.', 'Seguro, legal y fiable.'],
+                correct: 0,
+                explanation: 'Esas tres características explican su peligrosidad.'
+            },
+            {
+                text: '¿Qué práctica mejora la seguridad del sistema operativo?',
+                options: ['Aplicar el principio de privilegios mínimos.', 'Dar permisos de administrador a todos.', 'Desactivar actualizaciones.'],
+                correct: 0,
+                explanation: 'Cada usuario debe tener solo los permisos necesarios.'
+            },
+            {
+                text: '¿Qué opción describe mejor el phishing?',
+                options: ['Técnica de engaño para robar datos.', 'Herramienta de compresión.', 'Sistema de copia de seguridad.'],
+                correct: 0,
+                explanation: 'El phishing es ingeniería social para obtener información confidencial.'
+            },
+            {
+                text: '¿Qué debes hacer con un pendrive desconocido antes de usarlo?',
+                options: ['Escanearlo con el antivirus.', 'Ejecutar todos sus archivos.', 'Formatear el sistema principal.'],
+                correct: 0,
+                explanation: 'Los dispositivos externos son una vía clásica de infección.'
+            }
+        ];
+
+        const quizEl = document.getElementById('quiz');
+        const scoreBox = document.getElementById('scoreBox');
+        const resetBtn = document.getElementById('resetBtn');
+        const showAnswersBtn = document.getElementById('showAnswersBtn');
+
+        let answered = new Set();
+        let correctCount = 0;
+
+        function updateScore() {
+            scoreBox.textContent = `Aciertos: ${correctCount} / ${questions.length}`;
+        }
+
+        function renderQuiz() {
+            quizEl.innerHTML = '';
+            answered = new Set();
+            correctCount = 0;
+            updateScore();
+
+            questions.forEach((q, index) => {
+                const wrapper = document.createElement('article');
+                wrapper.className = 'question';
+
+                const title = document.createElement('h3');
+                title.textContent = `${index + 1}. ${q.text}`;
+                wrapper.appendChild(title);
+
+                const options = document.createElement('div');
+                options.className = 'options';
+
+                q.options.forEach((opt, optIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = `<strong>${String.fromCharCode(65 + optIndex)}.</strong> ${opt}`;
+                    btn.addEventListener('click', () => selectAnswer(index, optIndex, wrapper));
+                    options.appendChild(btn);
+                });
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                feedback.id = `feedback-${index}`;
+
+                wrapper.appendChild(options);
+                wrapper.appendChild(feedback);
+                quizEl.appendChild(wrapper);
+            });
+        }
+
+        function selectAnswer(qIndex, selected, wrapper) {
+            if (answered.has(qIndex)) return;
+
+            const q = questions[qIndex];
+            const buttons = wrapper.querySelectorAll('.option-btn');
+            const feedback = wrapper.querySelector('.feedback');
+            answered.add(qIndex);
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === q.correct) btn.classList.add('correct');
+            });
+
+            if (selected === q.correct) {
+                buttons[selected].classList.add('correct');
+                feedback.className = 'feedback ok';
+                feedback.innerHTML = `✅ Correcto. ${q.explanation}`;
+                correctCount++;
+            } else {
+                buttons[selected].classList.add('incorrect');
+                feedback.className = 'feedback bad';
+                feedback.innerHTML = `❌ Incorrecto. La correcta es <strong>${String.fromCharCode(65 + q.correct)}</strong>. ${q.options[q.correct]}<br>${q.explanation}`;
+            }
+
+            updateScore();
+        }
+
+        function showAllAnswers() {
+            const questionEls = quizEl.querySelectorAll('.question');
+            questions.forEach((q, idx) => {
+                const wrapper = questionEls[idx];
+                const buttons = wrapper.querySelectorAll('.option-btn');
+                const feedback = wrapper.querySelector('.feedback');
+
+                if (!answered.has(idx)) answered.add(idx);
+
+                buttons.forEach((btn, i) => {
+                    btn.disabled = true;
+                    if (i === q.correct) btn.classList.add('correct');
+                });
+
+                feedback.className = 'feedback ok';
+                feedback.innerHTML = `✔ Respuesta correcta: <strong>${String.fromCharCode(65 + q.correct)}</strong>. ${q.options[q.correct]}<br>${q.explanation}`;
+            });
+            correctCount = 0;
+            updateScore();
+        }
+
+        resetBtn.addEventListener('click', renderQuiz);
+        showAnswersBtn.addEventListener('click', showAllAnswers);
+
+        renderQuiz();
+    </script>
+</body>
+
+</html>

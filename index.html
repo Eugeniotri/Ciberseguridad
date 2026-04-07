@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ciberseguridad DAW</title>
+
   <style>
     :root {
       --bg: #081120;
@@ -25,10 +26,6 @@
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
       font-family: Arial, Helvetica, sans-serif;
       background:
@@ -37,373 +34,167 @@
         linear-gradient(180deg, #050b16 0%, var(--bg) 45%, #050b16 100%);
       color: var(--text);
       min-height: 100vh;
-      line-height: 1.6;
     }
 
     a {
-      color: inherit;
       text-decoration: none;
+      color: inherit;
     }
 
     .container {
       width: min(1100px, 92%);
-      margin: 0 auto;
+      margin: auto;
     }
 
     .hero {
       min-height: 100vh;
       display: flex;
       align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before,
-    .hero::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(70px);
-      opacity: 0.35;
-      z-index: 0;
-    }
-
-    .hero::before {
-      width: 280px;
-      height: 280px;
-      background: var(--primary);
-      top: 8%;
-      left: -80px;
-    }
-
-    .hero::after {
-      width: 320px;
-      height: 320px;
-      background: var(--primary-2);
-      bottom: 4%;
-      right: -100px;
     }
 
     .hero-content {
-      position: relative;
-      z-index: 1;
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
-      gap: 32px;
-      align-items: center;
-      width: 100%;
-      padding: 48px 0;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 8px 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(79, 209, 255, 0.08);
-      color: var(--primary);
-      font-size: 0.9rem;
-      margin-bottom: 18px;
-      letter-spacing: 0.4px;
+      gap: 30px;
     }
 
     h1 {
-      font-size: clamp(2.2rem, 5vw, 4.4rem);
-      line-height: 1.05;
-      margin-bottom: 18px;
+      font-size: 3rem;
+      margin-bottom: 15px;
     }
 
-    .hero p {
-      color: var(--muted);
-      max-width: 650px;
-      font-size: 1.05rem;
-      margin-bottom: 28px;
-    }
-
-    .cta-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 24px;
+    .badge {
+      color: var(--primary);
+      margin-bottom: 15px;
+      display: inline-block;
     }
 
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 13px 20px;
-      border-radius: 14px;
-      font-weight: bold;
-      transition: 0.25s ease;
-      border: 1px solid transparent;
+      padding: 12px 18px;
+      border-radius: 10px;
+      display: inline-block;
+      margin: 5px;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      color: #06111f;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px rgba(79, 209, 255, 0.18);
+      color: #000;
     }
 
     .btn-secondary {
-      border-color: var(--line);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--text);
-    }
-
-    .btn-secondary:hover {
-      transform: translateY(-2px);
-      border-color: rgba(79, 209, 255, 0.45);
+      border: 1px solid var(--line);
     }
 
     .hero-card {
-      background: linear-gradient(180deg, rgba(17, 30, 56, 0.95), rgba(8, 18, 34, 0.95));
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      padding: 24px;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(79, 209, 255, 0.08), transparent 45%, rgba(124, 92, 255, 0.12));
-      pointer-events: none;
-    }
-
-    .terminal {
-      position: relative;
-      z-index: 1;
-      font-family: Consolas, monospace;
-      color: #d7f5ff;
-      font-size: 0.96rem;
+      background: var(--card);
+      padding: 20px;
+      border-radius: 20px;
     }
 
     .terminal .line {
-      margin: 10px 0;
+      margin: 8px 0;
     }
 
-    .terminal .ok {
+    .accent {
+      color: var(--primary);
+    }
+
+    .ok {
       color: var(--ok);
     }
 
-    .terminal .accent {
-      color: var(--primary);
-    }
-
     .section {
-      padding: 80px 0;
+      padding: 60px 0;
     }
 
-    .section-title {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .section-title h2 {
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-      margin-bottom: 10px;
-    }
-
-    .section-title p {
-      color: var(--muted);
-      max-width: 720px;
-      margin: 0 auto;
+    .grid,
+    .units {
+      display: grid;
+      gap: 20px;
     }
 
     .grid {
-      display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 24px;
-      box-shadow: var(--shadow);
-      transition: transform 0.25s ease, border-color 0.25s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(79, 209, 255, 0.45);
-    }
-
-    .card h3 {
-      margin-bottom: 10px;
-      font-size: 1.2rem;
-      color: var(--primary);
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 0.98rem;
     }
 
     .units {
-      display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 22px;
     }
 
+    .card,
     .unit-card {
-      background: linear-gradient(180deg, rgba(12, 24, 45, 0.95), rgba(8, 17, 32, 0.95));
+      background: var(--card);
+      padding: 20px;
+      border-radius: 20px;
       border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    .unit-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
     }
 
     .unit-tag {
-      font-size: 0.85rem;
       color: var(--primary);
-      background: rgba(79, 209, 255, 0.08);
-      border: 1px solid var(--line);
-      padding: 6px 10px;
-      border-radius: 999px;
     }
 
     .status {
-      font-size: 0.82rem;
-      color: #06111f;
       background: var(--ok);
+      color: black;
       padding: 5px 10px;
       border-radius: 999px;
-      font-weight: bold;
     }
 
-    .status.pending {
-      background: #ffd166;
-      color: #2f2500;
-    }
-
-    .unit-card h3 {
-      margin-bottom: 10px;
-      font-size: 1.35rem;
-    }
-
-    .unit-card p {
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .unit-card ul {
+    ul {
       list-style: none;
-      margin-bottom: 18px;
     }
 
-    .unit-card li {
-      color: var(--text);
-      padding-left: 18px;
-      position: relative;
-      margin: 8px 0;
-      font-size: 0.96rem;
-    }
-
-    .unit-card li::before {
-      content: "▸";
-      position: absolute;
-      left: 0;
-      color: var(--primary);
+    li {
+      margin: 6px 0;
     }
 
     .footer {
-      padding: 28px 0 40px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
       text-align: center;
-      font-size: 0.95rem;
-    }
-
-    .mini-note {
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-left: 3px solid var(--primary);
-      background: rgba(79, 209, 255, 0.06);
-      border-radius: 10px;
+      padding: 30px;
       color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    @media (max-width: 900px) {
-
-      .hero-content,
-      .grid,
-      .units {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        min-height: auto;
-        padding-top: 40px;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .cta-group {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
-
-      .card,
-      .unit-card,
-      .hero-card {
-        padding: 20px;
-      }
     }
   </style>
 </head>
 
 <body>
+
   <header class="hero">
     <div class="container hero-content">
       <div>
-        <span class="badge">DAW · Ciberseguridad · Apuntes para estudiar</span>
+        <span class="badge">DAW · Ciberseguridad</span>
+
         <h1>Portal de estudio de <span style="color: var(--primary);">Ciberseguridad</span></h1>
+
         <p>
-          Web personal para organizar el temario, resumir cada unidad, practicar con tests y estudiar desde el móvil con
-          GitHub Pages.
+          Web personal para estudiar todas las unidades con resumen y test tipo examen.
         </p>
-        <div class="cta-group">
-          <a class="btn btn-primary" href="#unidades">Ver unidades</a>
-          <a class="btn btn-secondary" href="#estructura">Cómo está organizado</a>
-        </div>
-        <div class="mini-note">
-          Empieza por <strong>UF1</strong>, repasa <strong>UF2</strong> y entra en <strong>UF3</strong> para estudiar
-          copias de seguridad, resumen y test autocorregible.
+
+        <a class="btn btn-primary" href="#unidades">Ver unidades</a>
+
+        <div style="margin-top:15px;">
+          Empieza por <b>UF1</b>, repasa <b>UF2</b>, estudia <b>UF3</b> y entra en <b>UF4</b> para dominar seguridad
+          activa y malware.
         </div>
       </div>
 
       <div class="hero-card">
         <div class="terminal">
-          <div class="line"><span class="accent">&gt;</span> inicializando repositorio <span class="ok">OK</span></div>
-          <div class="line"><span class="accent">&gt;</span> cargando apuntes de ciberseguridad...</div>
-          <div class="line"><span class="accent">&gt;</span> módulos detectados: <span class="ok">UF1</span>, <span
-              class="ok">UF2</span>, <span class="ok">UF3</span>, UF4</div>
-          <div class="line"><span class="accent">&gt;</span> modo estudio: <span class="ok">ACTIVO</span></div>
-          <div class="line"><span class="accent">&gt;</span> acceso móvil vía GitHub Pages <span class="ok">LISTO</span>
+          <div class="line"><span class="accent">&gt;</span> módulos detectados:
+            <span class="ok">UF1</span>,
+            <span class="ok">UF2</span>,
+            <span class="ok">UF3</span>,
+            <span class="ok">UF4</span>
           </div>
-          <div class="line"><span class="accent">&gt;</span> páginas disponibles: <span class="ok">uf1.html</span>,
-            <span class="ok">uf2.html</span> y <span class="ok">uf3.html</span>
+
+          <div class="line"><span class="accent">&gt;</span> páginas disponibles:
+            <span class="ok">uf1.html</span>,
+            <span class="ok">uf2.html</span>,
+            <span class="ok">uf3.html</span>,
+            <span class="ok">uf4.html</span>
+          </div>
+
+          <div class="line"><span class="accent">&gt;</span> modo estudio:
+            <span class="ok">ACTIVO</span>
           </div>
         </div>
       </div>
@@ -411,108 +202,71 @@
   </header>
 
   <main>
-    <section class="section" id="estructura">
-      <div class="container">
-        <div class="section-title">
-          <h2>Estructura de la web</h2>
-          <p>Diseñada para repasar rápido, memorizar mejor y tener todo el temario accesible desde cualquier
-            dispositivo.</p>
-        </div>
-
-        <div class="grid">
-          <article class="card">
-            <h3>Resumen claro</h3>
-            <p>Cada unidad tendrá una explicación sencilla, directa y enfocada a examen.</p>
-          </article>
-          <article class="card">
-            <h3>Esquema visual</h3>
-            <p>Bloques cortos y organizados para memorizar conceptos clave en pocos minutos.</p>
-          </article>
-          <article class="card">
-            <h3>Test de repaso</h3>
-            <p>Preguntas tipo examen para practicar lo que más suele preguntar el profesor.</p>
-          </article>
-        </div>
-      </div>
-    </section>
 
     <section class="section" id="unidades">
       <div class="container">
-        <div class="section-title">
-          <h2>Unidades formativas</h2>
-          <p>Página principal del repositorio. Desde aquí podrás entrar a cada unidad cuando la vayas creando.</p>
-        </div>
+
+        <h2 style="text-align:center;margin-bottom:30px;">Unidades formativas</h2>
 
         <div class="units">
+
+          <!-- UF1 -->
           <article class="unit-card">
-            <div class="unit-top">
-              <span class="unit-tag">UF1</span>
-              <span class="status">Disponible</span>
-            </div>
-            <h3>Seguridad física, lógica y continuidad</h3>
-            <p>Primera unidad del temario con resumen visual, esquema de memorización y test.</p>
-            <ul>
-              <li>Esquema visual de memorización</li>
-              <li>Resumen de conceptos clave</li>
-              <li>Test centrado en lo más preguntado</li>
-            </ul>
+            <span class="unit-tag">UF1</span>
+            <span class="status">Disponible</span>
+
+            <h3>Seguridad física y lógica</h3>
+
             <a class="btn btn-secondary" href="uf1.html">Ir a UF1</a>
           </article>
 
+          <!-- UF2 -->
           <article class="unit-card">
-            <div class="unit-top">
-              <span class="unit-tag">UF2</span>
-              <span class="status">Disponible</span>
-            </div>
-            <h3>Gestión de almacenamiento</h3>
-            <p>Segunda unidad del temario con resumen, esquema visual y test completo.</p>
-            <ul>
-              <li>Dispositivos de almacenamiento y RAID</li>
-              <li>Monitorización y buenas prácticas</li>
-              <li>Test autocorregible para examen</li>
-            </ul>
+            <span class="unit-tag">UF2</span>
+            <span class="status">Disponible</span>
+
+            <h3>Almacenamiento</h3>
+
             <a class="btn btn-secondary" href="uf2.html">Ir a UF2</a>
           </article>
 
+          <!-- UF3 -->
           <article class="unit-card">
-            <div class="unit-top">
-              <span class="unit-tag">UF3</span>
-              <span class="status">Disponible</span>
-            </div>
-            <h3>Gestión de copias de seguridad</h3>
-            <p>Tercera unidad del temario con resumen para memorizar, conceptos clave y cuestionario autocorregible.</p>
-            <ul>
-              <li>Tipos de copias de seguridad</li>
-              <li>Regla 3-2-1, cifrado, compresión y restauración</li>
-              <li>Imágenes de respaldo y test interactivo</li>
-            </ul>
+            <span class="unit-tag">UF3</span>
+            <span class="status">Disponible</span>
+
+            <h3>Copias de seguridad</h3>
+
             <a class="btn btn-secondary" href="uf3.html">Ir a UF3</a>
           </article>
 
+          <!-- UF4 -->
           <article class="unit-card">
-            <div class="unit-top">
-              <span class="unit-tag">UF4</span>
-              <span class="status pending">Pendiente</span>
-            </div>
-            <h3>Próxima unidad</h3>
-            <p>Espacio reservado para la siguiente unidad del temario cuando la prepares.</p>
+            <span class="unit-tag">UF4</span>
+            <span class="status">Disponible</span>
+
+            <h3>Seguridad activa y malware</h3>
+
             <ul>
-              <li>Resumen visual</li>
-              <li>Conceptos clave para examen</li>
-              <li>Test de repaso</li>
+              <li>Seguridad activa</li>
+              <li>Incidentes y contingencia</li>
+              <li>Malware completo</li>
+              <li>Quiz interactivo</li>
             </ul>
-            <a class="btn btn-secondary" href="#">Próximamente</a>
+
+            <a class="btn btn-secondary" href="uf4.html">Ir a UF4</a>
           </article>
+
         </div>
       </div>
     </section>
+
   </main>
 
   <footer class="footer">
-    <div class="container">
-      <p>Proyecto personal de estudio · Ciberseguridad DAW · GitHub Pages</p>
-    </div>
+    Proyecto DAW · Ciberseguridad · GitHub Pages
   </footer>
+
 </body>
 
 </html>
