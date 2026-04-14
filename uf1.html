@@ -343,6 +343,21 @@
             accent-color: var(--primary);
         }
 
+        .option.correct-option {
+            border-color: rgba(84, 240, 165, 0.7);
+            background: rgba(84, 240, 165, 0.12);
+        }
+
+        .option.incorrect-option {
+            border-color: rgba(255, 107, 107, 0.7);
+            background: rgba(255, 107, 107, 0.12);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.95;
+        }
+
         .feedback {
             margin-top: 16px;
             padding: 14px 16px;
@@ -372,7 +387,7 @@
             border-radius: 22px;
             padding: 24px;
             box-shadow: var(--shadow);
-            display: none;
+            display: block;
         }
 
         .result-box h3 {
@@ -642,13 +657,16 @@
             <div class="container">
                 <div class="section-title">
                     <h2>Test final UF1 · 35 preguntas</h2>
-                    <p>Marca tus respuestas y pulsa el botón para corregir. Al final verás tu nota total.</p>
+                    <p>Marca una opción y se corregirá al instante.</p>
                 </div>
 
                 <div class="quiz-controls">
-                    <button class="btn btn-primary" onclick="corregirTest()">Corregir test</button>
                     <button class="btn btn-secondary" onclick="reiniciarTest()">Reiniciar</button>
-                    <div class="quiz-status">Total de preguntas: <strong>35</strong></div>
+                    <div class="quiz-status">
+                        Aciertos: <strong id="scoreOk">0</strong> /
+                        Respondidas: <strong id="scoreAnswered">0</strong> ·
+                        Total: <strong>35</strong>
+                    </div>
                 </div>
 
                 <form id="quizForm">
@@ -656,9 +674,9 @@
                 </form>
 
                 <div class="result-box" id="resultBox">
-                    <h3>Resultado del test</h3>
-                    <p id="scoreText"></p>
-                    <p id="scoreMessage"></p>
+                    <h3>Progreso del test</h3>
+                    <p id="scoreText"><strong>Aciertos:</strong> 0 de 35 · <strong>Nota:</strong> 0.00/10</p>
+                    <p id="scoreMessage">Responde para ver tu progreso en tiempo real.</p>
                 </div>
             </div>
         </section>
@@ -1079,6 +1097,38 @@
             }
         ];
 
+        let aciertos = 0;
+        let respondidas = 0;
+        const respuestasUsuario = new Array(preguntas.length).fill(null);
+
+        function actualizarMarcador() {
+            document.getElementById("scoreOk").textContent = aciertos;
+            document.getElementById("scoreAnswered").textContent = respondidas;
+
+            const total = preguntas.length;
+            const nota = ((aciertos / total) * 10).toFixed(2);
+            document.getElementById("scoreText").innerHTML =
+                `<strong>Aciertos:</strong> ${aciertos} de ${total} · <strong>Nota:</strong> ${nota}/10`;
+
+            let mensaje = "Responde para ver tu progreso en tiempo real.";
+
+            if (respondidas === total) {
+                if (aciertos >= 30) {
+                    mensaje = "Muy bien. Llevas la UF1 muy fuerte para examen.";
+                } else if (aciertos >= 24) {
+                    mensaje = "Buen nivel. Repasa los fallos y puedes sacar muy buena nota.";
+                } else if (aciertos >= 18) {
+                    mensaje = "Vas bien, pero conviene repasar DRP, SAI, ACL, MFA y condiciones del CPD.";
+                } else {
+                    mensaje = "Necesitas repasar más. Empieza por el esquema visual y vuelve a hacer el test.";
+                }
+            } else if (respondidas > 0) {
+                mensaje = "Sigue respondiendo. El test se corrige al instante.";
+            }
+
+            document.getElementById("scoreMessage").textContent = mensaje;
+        }
+
         function renderQuiz() {
             const container = document.getElementById("quizContainer");
             container.innerHTML = "";
@@ -1090,80 +1140,76 @@
                 let opcionesHTML = "";
                 for (const key in q.opciones) {
                     opcionesHTML += `
-            <label class="option">
-              <input type="radio" name="q${index}" value="${key}">
-              <strong>${key})</strong> ${q.opciones[key]}
-            </label>
-          `;
+                        <label class="option" id="label-${index}-${key}">
+                          <input type="radio" name="q${index}" value="${key}" onchange="responderPregunta(${index}, '${key}')">
+                          <strong>${key})</strong> ${q.opciones[key]}
+                        </label>
+                    `;
                 }
 
                 card.innerHTML = `
-          <div class="question-number">Pregunta ${index + 1} · ${q.bloque}</div>
-          <div class="question-title">${q.pregunta}</div>
-          <div class="options">${opcionesHTML}</div>
-          <div class="feedback" id="feedback${index}"></div>
-        `;
+                    <div class="question-number">Pregunta ${index + 1} · ${q.bloque}</div>
+                    <div class="question-title">${q.pregunta}</div>
+                    <div class="options">${opcionesHTML}</div>
+                    <div class="feedback" id="feedback${index}"></div>
+                `;
 
                 container.appendChild(card);
             });
         }
 
-        function corregirTest() {
-            let aciertos = 0;
+        function responderPregunta(index, valor) {
+            if (respuestasUsuario[index] !== null) return;
 
-            preguntas.forEach((q, index) => {
-                const seleccionada = document.querySelector(`input[name="q${index}"]:checked`);
-                const feedback = document.getElementById(`feedback${index}`);
+            const q = preguntas[index];
+            const feedback = document.getElementById(`feedback${index}`);
+            const opciones = document.querySelectorAll(`input[name="q${index}"]`);
+            const labels = document.querySelectorAll(`label[id^="label-${index}-"]`);
 
-                if (!seleccionada) {
-                    feedback.className = "feedback incorrect";
-                    feedback.innerHTML = `No has respondido esta pregunta. <br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
-                    return;
-                }
+            respuestasUsuario[index] = valor;
+            respondidas++;
 
-                if (seleccionada.value === q.correcta) {
-                    aciertos++;
-                    feedback.className = "feedback correct";
-                    feedback.innerHTML = `✅ Correcta. <strong>Explicación:</strong> ${q.explicacion}`;
-                } else {
-                    feedback.className = "feedback incorrect";
-                    feedback.innerHTML = `❌ Incorrecta. <br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
-                }
+            labels.forEach(label => {
+                label.classList.add("disabled");
             });
 
-            const total = preguntas.length;
-            const nota = ((aciertos / total) * 10).toFixed(2);
-            const resultBox = document.getElementById("resultBox");
-            const scoreText = document.getElementById("scoreText");
-            const scoreMessage = document.getElementById("scoreMessage");
+            opciones.forEach(input => {
+                input.disabled = true;
+            });
 
-            scoreText.innerHTML = `<strong>Aciertos:</strong> ${aciertos} de ${total} · <strong>Nota:</strong> ${nota}/10`;
-
-            if (aciertos >= 30) {
-                scoreMessage.textContent = "Muy bien. Llevas la UF1 muy fuerte para examen.";
-            } else if (aciertos >= 24) {
-                scoreMessage.textContent = "Buen nivel. Repasa los fallos y puedes sacar muy buena nota.";
-            } else if (aciertos >= 18) {
-                scoreMessage.textContent = "Vas bien, pero conviene repasar DRP, SAI, ACL, MFA y condiciones del CPD.";
+            if (valor === q.correcta) {
+                aciertos++;
+                document.getElementById(`label-${index}-${valor}`).classList.add("correct-option");
+                feedback.className = "feedback correct";
+                feedback.innerHTML = `✅ Correcta. <strong>Explicación:</strong> ${q.explicacion}`;
             } else {
-                scoreMessage.textContent = "Necesitas repasar más. Empieza por el esquema visual y vuelve a hacer el test.";
+                document.getElementById(`label-${index}-${valor}`).classList.add("incorrect-option");
+                document.getElementById(`label-${index}-${q.correcta}`).classList.add("correct-option");
+                feedback.className = "feedback incorrect";
+                feedback.innerHTML = `❌ Incorrecta.<br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
             }
 
-            resultBox.style.display = "block";
-            resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+            actualizarMarcador();
         }
 
         function reiniciarTest() {
-            document.getElementById("quizForm").reset();
-            document.querySelectorAll(".feedback").forEach(f => {
-                f.className = "feedback";
-                f.innerHTML = "";
+            aciertos = 0;
+            respondidas = 0;
+
+            for (let i = 0; i < respuestasUsuario.length; i++) {
+                respuestasUsuario[i] = null;
+            }
+
+            renderQuiz();
+            actualizarMarcador();
+            window.scrollTo({
+                top: document.getElementById("test").offsetTop - 20,
+                behavior: "smooth"
             });
-            document.getElementById("resultBox").style.display = "none";
-            window.scrollTo({ top: document.getElementById("test").offsetTop - 20, behavior: "smooth" });
         }
 
         renderQuiz();
+        actualizarMarcador();
     </script>
 </body>
 

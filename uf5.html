@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UF1 Ciberseguridad - Resumen + Quiz</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --panel-2: #1f2937;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --ok: #16a34a;
+            --bad: #dc2626;
+            --accent: #38bdf8;
+            --warn: #f59e0b;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(180deg, #0b1220, #111827);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin-top: 0;
+        }
+
+        .card {
+            background: rgba(17, 24, 39, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .intro {
+            display: grid;
+            gap: 16px;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #082f49;
+            color: #bae6fd;
+            border: 1px solid #0ea5e9;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .summary-box {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .summary-box h3 {
+            color: var(--accent);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        ul {
+            margin: 8px 0 0 18px;
+            padding: 0;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #bfdbfe;
+            background: #1e3a8a;
+            border: 1px solid #3b82f6;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+
+        .question-number {
+            color: var(--warn);
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            border: 1px solid var(--border);
+            background: #0b1324;
+            color: var(--text);
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s ease;
+            font-size: 16px;
+        }
+
+        .option:hover:not(:disabled) {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .option.correct {
+            background: rgba(22, 163, 74, 0.15);
+            border-color: var(--ok);
+        }
+
+        .option.incorrect {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: var(--bad);
+        }
+
+        .option:disabled {
+            cursor: default;
+            opacity: 0.95;
+        }
+
+        .feedback {
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 12px;
+            display: none;
+            border: 1px solid var(--border);
+            background: #111827;
+        }
+
+        .feedback.ok {
+            display: block;
+            border-color: var(--ok);
+            background: rgba(22, 163, 74, 0.08);
+        }
+
+        .feedback.bad {
+            display: block;
+            border-color: var(--bad);
+            background: rgba(220, 38, 38, 0.08);
+        }
+
+        .explanation {
+            margin-top: 8px;
+            color: var(--text);
+        }
+
+        .controls {
+            margin-top: 18px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button.ctrl {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        button.ctrl.secondary {
+            background: #374151;
+        }
+
+        button.ctrl:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .final-box {
+            text-align: center;
+            padding: 20px;
+            border-radius: 14px;
+            background: #0b1324;
+            border: 1px solid var(--border);
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        @media (max-width: 640px) {
+            .question-text {
+                font-size: 18px;
+            }
+
+            .container {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <section class="card intro">
+            <div>
+                <span class="pill">UF1 · Ciberseguridad</span>
+                <h1>Resumen ultra corto + Quiz de repaso</h1>
+                <p class="muted">Memoriza primero esto y luego practica con el cuestionario interactivo.</p>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <h3>Base</h3>
+                    <ul>
+                        <li>Seguridad = confidencialidad, integridad y disponibilidad.</li>
+                        <li>Ataque pasivo = espía. Activo = modifica o daña.</li>
+                        <li>Intrusión externa = desde fuera. Interna = desde dentro.</li>
+                    </ul>
+                </div>
+
+                <div class="summary-box">
+                    <h3>Ataques</h3>
+                    <ul>
+                        <li>Phishing = engañar al usuario.</li>
+                        <li>Sniffing = capturar tráfico.</li>
+                        <li>MitM = interceptar y modificar.</li>
+                        <li>DoS = 1 atacante; DDoS = muchos.</li>
+                        <li>SQLi = inyectar código en BD.</li>
+                        <li>Ransomware = cifra y pide rescate.</li>
+                    </ul>
+                </div>
+
+                <div class="summary-box">
+                    <h3>Protocolos y acceso</h3>
+                    <ul>
+                        <li>HTTPS = web segura.</li>
+                        <li>SSH = acceso remoto seguro.</li>
+                        <li>Telnet y HTTP = sin cifrado.</li>
+                        <li>VPN = túnel seguro en redes no fiables.</li>
+                        <li>MFA = defensa clave contra fuerza bruta.</li>
+                    </ul>
+                </div>
+
+                <div class="summary-box">
+                    <h3>Firewall</h3>
+                    <ul>
+                        <li>Filtra tráfico según reglas.</li>
+                        <li>ACL = reglas de permitir o bloquear.</li>
+                        <li>Stateful = controla el estado de la conexión.</li>
+                        <li>WAF = protege aplicaciones web.</li>
+                        <li>Logs = registro y detección.</li>
+                        <li>DMZ = servidores públicos sin exponer la red interna.</li>
+                    </ul>
+                </div>
+
+                <div class="summary-box">
+                    <h3>Proxy</h3>
+                    <ul>
+                        <li>Proxy = intermediario entre cliente y servidor.</li>
+                        <li>Caché = ahorra ancho de banda.</li>
+                        <li>Transparente = sin configurar el cliente.</li>
+                        <li>Inverso = protege servidores internos.</li>
+                    </ul>
+                </div>
+
+                <div class="summary-box">
+                    <h3>Herramientas y conceptos</h3>
+                    <ul>
+                        <li>Nmap = escaneo de puertos.</li>
+                        <li>Wireshark = análisis de paquetes.</li>
+                        <li>VLAN = segmentación de red.</li>
+                        <li>Zero Trust = no confiar en nadie por defecto.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" id="quizSection">
+            <div class="quiz-header">
+                <h2>Quiz interactivo</h2>
+                <div class="score" id="scoreBox">Aciertos: 0 / 0</div>
+            </div>
+
+            <div id="quizArea">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="feedback" id="feedbackBox"></div>
+                <div class="controls">
+                    <button class="ctrl" id="nextBtn" disabled>Siguiente</button>
+                    <button class="ctrl secondary" id="restartBtn">Reiniciar</button>
+                </div>
+            </div>
+
+            <div id="finalScreen" class="hidden final-box">
+                <h2>Quiz terminado</h2>
+                <p id="finalResult"></p>
+                <button class="ctrl" id="restartBtnFinal">Volver a empezar</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "¿Cuál de las siguientes es una medida efectiva para mitigar ataques de fuerza bruta en accesos remotos?",
+                options: {
+                    a: "Permitir intentos ilimitados de inicio de sesión.",
+                    b: "Implementar autenticación multifactor (MFA).",
+                    c: "Usar contraseñas cortas y fáciles de recordar."
+                },
+                correct: "b",
+                explanation: "La MFA añade una capa extra de seguridad. Aunque acierten la contraseña, sin el segundo factor no podrán entrar."
+            },
+            {
+                question: "¿Qué protocolo cifra el tráfico de las conexiones web para proteger la información?",
+                options: {
+                    a: "HTTP.",
+                    b: "FTP.",
+                    c: "HTTPS."
+                },
+                correct: "c",
+                explanation: "HTTPS cifra la comunicación web mediante TLS/SSL y protege frente a espionaje e interceptación."
+            },
+            {
+                question: "¿Qué tipo de firewall posibilita analizar el estado de una conexión antes de permitir el tráfico?",
+                options: {
+                    a: "Firewall de filtrado de paquetes.",
+                    b: "Firewall basado en reglas estáticas.",
+                    c: "Firewall de estado."
+                },
+                correct: "c",
+                explanation: "El firewall de estado recuerda las conexiones activas y verifica si el tráfico pertenece a una conexión legítima."
+            },
+            {
+                question: "¿Cuál es el principal objetivo de la seguridad de red?",
+                options: {
+                    a: "Optimizar el uso del ancho de banda.",
+                    b: "Garantizar la confidencialidad, la integridad y la disponibilidad de la información.",
+                    c: "Aumentar la velocidad de conexión a Internet."
+                },
+                correct: "b",
+                explanation: "La base de la seguridad es la triada CIA: confidencialidad, integridad y disponibilidad."
+            },
+            {
+                question: "¿Qué ataque consiste en engañar a los usuarios con correos electrónicos o sitios falsos para robar información?",
+                options: {
+                    a: "Spoofing.",
+                    b: "Phishing.",
+                    c: "Sniffing."
+                },
+                correct: "b",
+                explanation: "El phishing es un ataque de ingeniería social que engaña al usuario con mensajes o webs falsas."
+            },
+            {
+                question: "¿Qué ventaja ofrece un proxy inverso en la seguridad de una red?",
+                options: {
+                    a: "Aumenta la velocidad de descarga de archivos personales.",
+                    b: "Permite ocultar las direcciones IP de los usuarios internos.",
+                    c: "Protege los servidores internos contra accesos directos desde Internet."
+                },
+                correct: "c",
+                explanation: "El proxy inverso se coloca delante de los servidores y filtra peticiones externas antes de que lleguen a ellos."
+            },
+            {
+                question: "¿Qué tipo de ataque se basa en interceptar el tráfico sin modificarlo?",
+                options: {
+                    a: "Sniffing.",
+                    b: "Ransomware.",
+                    c: "Phishing."
+                },
+                correct: "a",
+                explanation: "El sniffing captura y observa paquetes de red. Es un ataque pasivo."
+            },
+            {
+                question: "¿Qué protocolo se recomienda para acceder de forma segura a un servidor remoto?",
+                options: {
+                    a: "FTP.",
+                    b: "SSH.",
+                    c: "Telnet."
+                },
+                correct: "b",
+                explanation: "SSH cifra la conexión remota y sustituye a Telnet, que es inseguro."
+            },
+            {
+                question: "¿Qué mecanismo de seguridad permite proteger los servidores expuestos a Internet sin comprometer la red interna?",
+                options: {
+                    a: "DMZ (zona desmilitarizada).",
+                    b: "VLAN.",
+                    c: "Proxy caché."
+                },
+                correct: "a",
+                explanation: "La DMZ es una zona intermedia donde se ubican servidores públicos sin exponer directamente la red interna."
+            },
+            {
+                question: "¿Cuál de los siguientes tipos de firewall es más efectivo para bloquear ataques a aplicaciones web?",
+                options: {
+                    a: "WAF (Web Application Firewall).",
+                    b: "Firewall de estado.",
+                    c: "Proxy transparente."
+                },
+                correct: "a",
+                explanation: "El WAF protege aplicaciones web frente a ataques como inyección SQL y XSS."
+            },
+            {
+                question: "¿Cuál de estos ataques busca saturar un servidor para dejarlo fuera de servicio?",
+                options: {
+                    a: "Inyección SQL.",
+                    b: "Man-in-the-Middle (MitM).",
+                    c: "Denegación de servicio (DoS/DDoS)."
+                },
+                correct: "c",
+                explanation: "DoS y DDoS intentan colapsar un servicio mediante gran cantidad de tráfico."
+            },
+            {
+                question: "¿Qué tipo de ataque intenta introducir código malicioso en formularios web para manipular bases de datos?",
+                options: {
+                    a: "Ransomware.",
+                    b: "Inyección SQL.",
+                    c: "Sniffing."
+                },
+                correct: "b",
+                explanation: "La inyección SQL introduce código en formularios o parámetros para alterar consultas a bases de datos."
+            },
+            {
+                question: "¿Qué función cumple un firewall en una red?",
+                options: {
+                    a: "Bloquear todos los accesos externos a la red.",
+                    b: "Almacenar copias de seguridad de los datos.",
+                    c: "Filtrar y controlar el tráfico de red según reglas de seguridad."
+                },
+                correct: "c",
+                explanation: "Un firewall filtra el tráfico y decide qué comunicaciones permite o bloquea."
+            },
+            {
+                question: "¿Cuál es la principal función de un proxy en una red?",
+                options: {
+                    a: "Actuar como intermediario entre los usuarios y los servidores externos.",
+                    b: "Almacenar datos de respaldo para evitar su pérdida.",
+                    c: "Proteger las bases de datos contra ataques de inyección SQL."
+                },
+                correct: "a",
+                explanation: "El proxy recibe la petición del cliente y la reenvía al servidor, actuando como intermediario."
+            },
+            {
+                question: "¿Qué herramienta se usa para escanear puertos y detectar servicios abiertos en una red?",
+                options: {
+                    a: "Nmap.",
+                    b: "Squid.",
+                    c: "Wireshark."
+                },
+                correct: "a",
+                explanation: "Nmap se usa para detectar puertos abiertos y servicios activos en equipos de red."
+            },
+            {
+                question: "¿Cuál de las siguientes afirmaciones describe mejor un ataque de tipo Man-in-the-Middle (MitM)?",
+                options: {
+                    a: "El atacante cifra los archivos del usuario y pide un rescate.",
+                    b: "El atacante intercepta y puede modificar la comunicación entre dos partes.",
+                    c: "El atacante envía múltiples solicitudes para saturar un servidor."
+                },
+                correct: "b",
+                explanation: "MitM significa que el atacante se sitúa en medio de la comunicación para espiar o modificar mensajes."
+            },
+            {
+                question: "¿Qué medida ayuda a evitar el sniffing en redes públicas?",
+                options: {
+                    a: "Usar HTTP en lugar de HTTPS.",
+                    b: "Conectarse a redes WiFi abiertas sin contraseña.",
+                    c: "Utilizar VPN y protocolos cifrados."
+                },
+                correct: "c",
+                explanation: "VPN y HTTPS cifran el tráfico y dificultan que un atacante pueda leer los paquetes capturados."
+            },
+            {
+                question: "¿Qué característica diferencia principalmente a un firewall de estado frente a uno de filtrado de paquetes?",
+                options: {
+                    a: "El firewall de estado analiza el contenido de páginas web.",
+                    b: "El firewall de estado tiene en cuenta el estado de la conexión.",
+                    c: "El firewall de estado solo filtra por IP y puerto."
+                },
+                correct: "b",
+                explanation: "La diferencia clave es que el stateful firewall controla el contexto de la conexión, no solo el paquete aislado."
+            },
+            {
+                question: "¿Qué elemento permite dividir una red en segmentos para mejorar la seguridad?",
+                options: {
+                    a: "VPN.",
+                    b: "VLAN.",
+                    c: "HTTPS."
+                },
+                correct: "b",
+                explanation: "Las VLAN permiten separar lógicamente una red en segmentos aislados."
+            },
+            {
+                question: "¿Qué tipo de intrusión ocurre cuando un empleado con acceso legítimo roba información?",
+                options: {
+                    a: "Intrusión externa.",
+                    b: "Intrusión interna.",
+                    c: "Ataque pasivo."
+                },
+                correct: "b",
+                explanation: "Es una intrusión interna porque el origen del ataque está dentro de la organización."
+            },
+            {
+                question: "¿Qué herramienta se utiliza principalmente para analizar paquetes de red en tiempo real?",
+                options: {
+                    a: "Nmap.",
+                    b: "Wireshark.",
+                    c: "Squid."
+                },
+                correct: "b",
+                explanation: "Wireshark captura y analiza paquetes; Nmap escanea puertos y Squid es un proxy."
+            },
+            {
+                question: "¿Qué tipo de ataque utiliza múltiples dispositivos para lanzar un ataque simultáneo?",
+                options: {
+                    a: "DoS.",
+                    b: "DDoS.",
+                    c: "Phishing."
+                },
+                correct: "b",
+                explanation: "El DDoS es un ataque distribuido lanzado desde múltiples equipos, a menudo una botnet."
+            },
+            {
+                question: "¿Qué elemento permite crear una conexión segura a través de una red no confiable?",
+                options: {
+                    a: "VPN.",
+                    b: "VLAN.",
+                    c: "Firewall."
+                },
+                correct: "a",
+                explanation: "La VPN crea un túnel cifrado para comunicarse de forma segura sobre redes inseguras."
+            },
+            {
+                question: "¿Qué ataque se basa en engañar a una persona para obtener información confidencial?",
+                options: {
+                    a: "Ingeniería social.",
+                    b: "Sniffing.",
+                    c: "DDoS."
+                },
+                correct: "a",
+                explanation: "La ingeniería social manipula a la persona para conseguir datos o accesos."
+            },
+            {
+                question: "¿Qué tipo de proxy no requiere configuración manual en el cliente?",
+                options: {
+                    a: "Proxy explícito.",
+                    b: "Proxy transparente.",
+                    c: "Proxy inverso."
+                },
+                correct: "b",
+                explanation: "El proxy transparente redirige el tráfico automáticamente sin que el usuario tenga que configurarlo."
+            },
+            {
+                question: "¿Qué tipo de malware cifra los archivos del usuario y exige un pago para recuperarlos?",
+                options: {
+                    a: "Worm.",
+                    b: "Ransomware.",
+                    c: "Spyware."
+                },
+                correct: "b",
+                explanation: "El ransomware cifra los archivos y exige un rescate para su recuperación."
+            },
+            {
+                question: "¿Qué función tienen los logs de un firewall?",
+                options: {
+                    a: "Aumentar la velocidad de la red.",
+                    b: "Registrar eventos y detectar actividades sospechosas.",
+                    c: "Encriptar el tráfico."
+                },
+                correct: "b",
+                explanation: "Los logs del firewall permiten revisar actividad, detectar incidentes y hacer auditorías."
+            },
+            {
+                question: "¿Qué protocolo se considera inseguro porque transmite información en texto plano?",
+                options: {
+                    a: "SSH.",
+                    b: "HTTPS.",
+                    c: "Telnet."
+                },
+                correct: "c",
+                explanation: "Telnet no cifra la comunicación y transmite datos en texto plano."
+            },
+            {
+                question: "¿Qué elemento se utiliza para controlar qué tráfico está permitido o bloqueado en un firewall?",
+                options: {
+                    a: "ACL (listas de control de acceso).",
+                    b: "VLAN.",
+                    c: "VPN."
+                },
+                correct: "a",
+                explanation: "Las ACL definen las reglas que usa el firewall para permitir o bloquear tráfico."
+            },
+            {
+                question: "¿Qué política de seguridad se basa en no confiar en ningún usuario o dispositivo, ni siquiera dentro de la red?",
+                options: {
+                    a: "Firewall perimetral.",
+                    b: "Zero Trust.",
+                    c: "Proxy transparente."
+                },
+                correct: "b",
+                explanation: "Zero Trust parte de la idea de verificar todo y no confiar en nadie por defecto."
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let answered = 0;
+
+        const questionNumber = document.getElementById('questionNumber');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const feedbackBox = document.getElementById('feedbackBox');
+        const nextBtn = document.getElementById('nextBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const restartBtnFinal = document.getElementById('restartBtnFinal');
+        const scoreBox = document.getElementById('scoreBox');
+        const quizArea = document.getElementById('quizArea');
+        const finalScreen = document.getElementById('finalScreen');
+        const finalResult = document.getElementById('finalResult');
+
+        function updateScore() {
+            scoreBox.textContent = `Aciertos: ${score} / ${answered}`;
+        }
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            feedbackBox.className = 'feedback';
+            feedbackBox.style.display = 'none';
+            feedbackBox.innerHTML = '';
+            nextBtn.disabled = true;
+
+            questionNumber.textContent = `Pregunta ${currentIndex + 1} de ${questions.length}`;
+            questionText.textContent = q.question;
+            optionsContainer.innerHTML = '';
+
+            Object.entries(q.options).forEach(([key, text]) => {
+                const btn = document.createElement('button');
+                btn.className = 'option';
+                btn.innerHTML = `<strong>${key})</strong> ${text}`;
+                btn.addEventListener('click', () => handleAnswer(key, btn));
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selected, selectedButton) {
+            const q = questions[currentIndex];
+            const buttons = document.querySelectorAll('.option');
+            buttons.forEach(btn => btn.disabled = true);
+
+            answered++;
+            const correctButton = Array.from(buttons).find(btn => btn.innerText.trim().toLowerCase().startsWith(q.correct + ')'));
+
+            if (selected === q.correct) {
+                score++;
+                selectedButton.classList.add('correct');
+                feedbackBox.className = 'feedback ok';
+                feedbackBox.style.display = 'block';
+                feedbackBox.innerHTML = `<strong>✅ Correcto.</strong><div class="explanation">${q.explanation}</div>`;
+            } else {
+                selectedButton.classList.add('incorrect');
+                if (correctButton) correctButton.classList.add('correct');
+                feedbackBox.className = 'feedback bad';
+                feedbackBox.style.display = 'block';
+                feedbackBox.innerHTML = `<strong>❌ Incorrecto.</strong> La correcta es <strong>${q.correct.toUpperCase()}</strong>.<div class="explanation">${q.explanation}</div>`;
+            }
+
+            updateScore();
+            nextBtn.disabled = false;
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                renderQuestion();
+            } else {
+                showFinalScreen();
+            }
+        }
+
+        function showFinalScreen() {
+            quizArea.classList.add('hidden');
+            finalScreen.classList.remove('hidden');
+            const percent = Math.round((score / questions.length) * 100);
+            let message = '';
+            if (percent >= 90) message = 'Excelente dominio.';
+            else if (percent >= 75) message = 'Muy buen nivel.';
+            else if (percent >= 60) message = 'Vas bien, pero conviene repasar errores.';
+            else message = 'Necesitas repasar los conceptos clave.';
+            finalResult.innerHTML = `Has acertado <strong>${score}</strong> de <strong>${questions.length}</strong> preguntas (${percent}%).<br><br>${message}`;
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            score = 0;
+            answered = 0;
+            updateScore();
+            finalScreen.classList.add('hidden');
+            quizArea.classList.remove('hidden');
+            renderQuestion();
+        }
+
+        nextBtn.addEventListener('click', nextQuestion);
+        restartBtn.addEventListener('click', restartQuiz);
+        restartBtnFinal.addEventListener('click', restartQuiz);
+
+        updateScore();
+        renderQuestion();
+    </script>
+</body>
+
+</html>

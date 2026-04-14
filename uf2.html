@@ -343,6 +343,21 @@
             accent-color: var(--primary);
         }
 
+        .option.correct-option {
+            border-color: rgba(84, 240, 165, 0.7);
+            background: rgba(84, 240, 165, 0.12);
+        }
+
+        .option.incorrect-option {
+            border-color: rgba(255, 107, 107, 0.7);
+            background: rgba(255, 107, 107, 0.12);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.95;
+        }
+
         .feedback {
             margin-top: 16px;
             padding: 14px 16px;
@@ -372,7 +387,7 @@
             border-radius: 22px;
             padding: 24px;
             box-shadow: var(--shadow);
-            display: none;
+            display: block;
         }
 
         .result-box h3 {
@@ -394,6 +409,7 @@
         }
 
         @media (max-width: 900px) {
+
             .hero,
             .summary-grid,
             .memory-grid {
@@ -402,6 +418,7 @@
         }
 
         @media (max-width: 560px) {
+
             .cta-group,
             .quiz-controls {
                 flex-direction: column;
@@ -436,6 +453,7 @@
                 <div class="cta-group">
                     <a href="#resumen" class="btn btn-primary">Ver resumen</a>
                     <a href="#test" class="btn btn-secondary">Ir al test</a>
+                    <a href="index.html" class="btn btn-secondary">Volver al inicio</a>
                 </div>
             </div>
 
@@ -443,8 +461,10 @@
                 <div class="mini-terminal">
                     <div class="line"><span class="accent">&gt;</span> cargando unidad <span class="ok">UF2</span></div>
                     <div class="line"><span class="accent">&gt;</span> temas clave: SSD, NVMe, RAID, backup, 3-2-1</div>
-                    <div class="line"><span class="accent">&gt;</span> almacenamiento offline: <span class="ok">más seguro ante ransomware</span></div>
-                    <div class="line"><span class="accent">&gt;</span> backup crítico: <span class="ok">restaurar datos tras desastre</span></div>
+                    <div class="line"><span class="accent">&gt;</span> almacenamiento offline: <span class="ok">más
+                            seguro ante ransomware</span></div>
+                    <div class="line"><span class="accent">&gt;</span> backup crítico: <span class="ok">restaurar datos
+                            tras desastre</span></div>
                     <div class="line"><span class="accent">&gt;</span> modo examen: <span class="ok">ACTIVO</span></div>
                 </div>
             </div>
@@ -464,7 +484,8 @@
                 <div class="summary-grid">
                     <article class="card">
                         <h3>1.1 Dispositivos de almacenamiento</h3>
-                        <p>Los dispositivos de almacenamiento guardan información de forma permanente. Se diferencian de la RAM, que pierde los datos al apagar el equipo.</p>
+                        <p>Los dispositivos de almacenamiento guardan información de forma permanente. Se diferencian de
+                            la RAM, que pierde los datos al apagar el equipo.</p>
                         <ul>
                             <li>Jerarquía: registros → caché → RAM → almacenamiento secundario</li>
                             <li>Tipos principales: HDD, SSD y NVMe</li>
@@ -475,7 +496,8 @@
 
                     <article class="card">
                         <h3>1.2 Almacenamiento terciario</h3>
-                        <p>Es un tercer nivel de almacenamiento pensado para grandes volúmenes de datos que se consultan poco.</p>
+                        <p>Es un tercer nivel de almacenamiento pensado para grandes volúmenes de datos que se consultan
+                            poco.</p>
                         <ul>
                             <li>Más lento que el almacenamiento secundario</li>
                             <li>Muy usado para archivado y backups a largo plazo</li>
@@ -519,7 +541,8 @@
 
                     <article class="card">
                         <h3>2. Copias de seguridad</h3>
-                        <p>Un backup es un duplicado de datos importantes para poder recuperarlos tras un desastre, un borrado accidental o un ciberataque.</p>
+                        <p>Un backup es un duplicado de datos importantes para poder recuperarlos tras un desastre, un
+                            borrado accidental o un ciberataque.</p>
                         <ul>
                             <li>Tipos: completa, incremental, diferencial, imagen del sistema, continua</li>
                             <li>Medios: discos externos, NAS, SAN, nube, cintas</li>
@@ -623,7 +646,8 @@
                 </div>
 
                 <div class="note">
-                    <strong>Lo que más suele caer:</strong> diferencias RAM/almacenamiento, SSD vs NVMe, almacenamiento offline,
+                    <strong>Lo que más suele caer:</strong> diferencias RAM/almacenamiento, SSD vs NVMe, almacenamiento
+                    offline,
                     NAS/SAN, RAID 0-1-5-6-10, tipos de backup, deduplicación, cifrado, monitorización y regla 3-2-1.
                 </div>
             </div>
@@ -633,13 +657,16 @@
             <div class="container">
                 <div class="section-title">
                     <h2>Test final UF2 · 55 preguntas</h2>
-                    <p>Marca tus respuestas y pulsa el botón para corregir. Al final verás tu nota total.</p>
+                    <p>Marca una opción y se corregirá al instante.</p>
                 </div>
 
                 <div class="quiz-controls">
-                    <button class="btn btn-primary" onclick="corregirTest()">Corregir test</button>
                     <button class="btn btn-secondary" onclick="reiniciarTest()">Reiniciar</button>
-                    <div class="quiz-status">Total de preguntas: <strong>55</strong></div>
+                    <div class="quiz-status">
+                        Aciertos: <strong id="scoreOk">0</strong> /
+                        Respondidas: <strong id="scoreAnswered">0</strong> ·
+                        Total: <strong>55</strong>
+                    </div>
                 </div>
 
                 <form id="quizForm">
@@ -647,9 +674,9 @@
                 </form>
 
                 <div class="result-box" id="resultBox">
-                    <h3>Resultado del test</h3>
-                    <p id="scoreText"></p>
-                    <p id="scoreMessage"></p>
+                    <h3>Progreso del test</h3>
+                    <p id="scoreText"><strong>Aciertos:</strong> 0 de 55 · <strong>Nota:</strong> 0.00/10</p>
+                    <p id="scoreMessage">Responde para ver tu progreso en tiempo real.</p>
                 </div>
             </div>
         </section>
@@ -710,7 +737,7 @@
             { bloque: "Test externo", pregunta: "¿Qué es una instantánea de copia de seguridad?", opciones: { a: "Un duplicado completo del sistema en tiempo real", b: "Una congelación del sistema de archivos en un momento determinado", c: "Una copia en caliente de todos los datos del sistema" }, correcta: "b", explicacion: "Un snapshot captura el estado del sistema en un instante concreto." },
             { bloque: "Test externo", pregunta: "¿Qué ventaja tiene el almacenamiento distribuido?", opciones: { a: "Reduce la velocidad de transferencia", b: "Elimina la necesidad de una red informática", c: "Facilita las copias de seguridad centralizadas" }, correcta: "c", explicacion: "Centraliza la gestión y facilita la protección de datos." },
             { bloque: "Test externo", pregunta: "¿Cuál de las siguientes es una desventaja de la encriptación en las copias de seguridad?", opciones: { a: "Ocupa más espacio de almacenamiento", b: "Disminuye la velocidad del proceso", c: "Reduce la vida útil del dispositivo de almacenamiento" }, correcta: "b", explicacion: "El cifrado añade carga de CPU y hace el proceso más lento." },
-            { bloque: "Test externo", pregunta: "¿Qué define al almacenamiento en estado sólido (SSD)?", opciones: { a: "Su bajo coste comparado con los discos duros convencionales", b: "Su capacidad de almacenamiento superior", c: "Su mayor velocidad de transferencia" }, correcta: "c", explicacion: "La velocidad es la gran ventaja del SSD frente al HDD." },
+            { bloque: "Test externo", pregunta: "¿Qué define al almacenamiento en estado sólido (SSD)?", opciones: { a: "Su bajo coste comparado con los discos duros convencionales", b: "Su capacidad de almacenamiento superior", c: "Su mayor velocidad de transferencia" }, correcta: "c", explicacion: "La velocidad es la gran ventaja del SSD frente a HDD." },
             { bloque: "Test externo", pregunta: "¿Cuál es el principal objetivo de las copias de seguridad?", opciones: { a: "Recuperar datos tras un desastre o pérdida accidental", b: "Evitar la redundancia en la información", c: "Mejorar el rendimiento del sistema" }, correcta: "a", explicacion: "El objetivo principal es recuperar datos ante pérdida o desastre." },
             { bloque: "Test externo", pregunta: "¿Qué esquema de copia de seguridad registra todos los cambios en tiempo real?", opciones: { a: "Copia completa e incremental", b: "Protección continua de datos", c: "Cinta magnética con acceso rápido" }, correcta: "b", explicacion: "La protección continua de datos registra cambios en tiempo real." },
             { bloque: "Test externo", pregunta: "¿Qué caracteriza a un sistema RAID de software?", opciones: { a: "Permite el intercambio en caliente de discos", b: "Requiere una tarjeta controladora dedicada", c: "Utiliza el procesador principal para los cálculos" }, correcta: "c", explicacion: "En RAID software, la CPU del sistema hace los cálculos." },
@@ -720,6 +747,38 @@
             { bloque: "Test externo", pregunta: "¿Cuál de los siguientes es un ejemplo típico de almacenamiento fuera de línea?", opciones: { a: "Un disco duro externo conectado por USB", b: "Un sistema NAS accesible por red", c: "Una memoria flash USB almacenada en un lugar seguro" }, correcta: "c", explicacion: "Offline significa que el soporte está desconectado y guardado." },
             { bloque: "Test externo", pregunta: "¿Cuál de las siguientes es una ventaja clave de los sistemas de almacenamiento redundante (RAID)?", opciones: { a: "Permiten combinar diferentes tipos de almacenamiento en una misma unidad lógica", b: "Garantizan la disponibilidad de los datos incluso si falla uno de los discos", c: "Aumentan significativamente la velocidad de transferencia en todas las configuraciones" }, correcta: "b", explicacion: "La redundancia permite seguir trabajando si falla un disco." }
         ];
+
+        let aciertos = 0;
+        let respondidas = 0;
+        const respuestasUsuario = new Array(preguntas.length).fill(null);
+
+        function actualizarMarcador() {
+            document.getElementById("scoreOk").textContent = aciertos;
+            document.getElementById("scoreAnswered").textContent = respondidas;
+
+            const total = preguntas.length;
+            const nota = ((aciertos / total) * 10).toFixed(2);
+            document.getElementById("scoreText").innerHTML =
+                `<strong>Aciertos:</strong> ${aciertos} de ${total} · <strong>Nota:</strong> ${nota}/10`;
+
+            let mensaje = "Responde para ver tu progreso en tiempo real.";
+
+            if (respondidas === total) {
+                if (aciertos >= 48) {
+                    mensaje = "Muy bien. Llevas la UF2 muy fuerte para examen.";
+                } else if (aciertos >= 39) {
+                    mensaje = "Buen nivel. Repasa los fallos y puedes sacar muy buena nota.";
+                } else if (aciertos >= 30) {
+                    mensaje = "Vas bien, pero conviene repasar RAID, tipos de backup, almacenamiento en red y regla 3-2-1.";
+                } else {
+                    mensaje = "Necesitas repasar más. Empieza por el esquema visual y vuelve a hacer el test.";
+                }
+            } else if (respondidas > 0) {
+                mensaje = "Sigue respondiendo. El test se corrige al instante.";
+            }
+
+            document.getElementById("scoreMessage").textContent = mensaje;
+        }
 
         function renderQuiz() {
             const container = document.getElementById("quizContainer");
@@ -732,80 +791,77 @@
                 let opcionesHTML = "";
                 for (const key in q.opciones) {
                     opcionesHTML += `
-            <label class="option">
-              <input type="radio" name="q${index}" value="${key}">
-              <strong>${key})</strong> ${q.opciones[key]}
-            </label>
-          `;
+                        <label class="option" id="label-${index}-${key}">
+                          <input type="radio" name="q${index}" value="${key}" onchange="responderPregunta(${index}, '${key}')">
+                          <strong>${key})</strong> ${q.opciones[key]}
+                        </label>
+                    `;
                 }
 
                 card.innerHTML = `
-          <div class="question-number">Pregunta ${index + 1} · ${q.bloque}</div>
-          <div class="question-title">${q.pregunta}</div>
-          <div class="options">${opcionesHTML}</div>
-          <div class="feedback" id="feedback${index}"></div>
-        `;
+                    <div class="question-number">Pregunta ${index + 1} · ${q.bloque}</div>
+                    <div class="question-title">${q.pregunta}</div>
+                    <div class="options">${opcionesHTML}</div>
+                    <div class="feedback" id="feedback${index}"></div>
+                `;
 
                 container.appendChild(card);
             });
         }
 
-        function corregirTest() {
-            let aciertos = 0;
+        function responderPregunta(index, valor) {
+            if (respuestasUsuario[index] !== null) return;
 
-            preguntas.forEach((q, index) => {
-                const seleccionada = document.querySelector(`input[name="q${index}"]:checked`);
-                const feedback = document.getElementById(`feedback${index}`);
+            const q = preguntas[index];
+            const feedback = document.getElementById(`feedback${index}`);
+            const opciones = document.querySelectorAll(`input[name="q${index}"]`);
+            const labels = document.querySelectorAll(`label[id^="label-${index}-"]`);
 
-                if (!seleccionada) {
-                    feedback.className = "feedback incorrect";
-                    feedback.innerHTML = `No has respondido esta pregunta. <br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
-                    return;
-                }
+            respuestasUsuario[index] = valor;
+            respondidas++;
 
-                if (seleccionada.value === q.correcta) {
-                    aciertos++;
-                    feedback.className = "feedback correct";
-                    feedback.innerHTML = `✅ Correcta. <strong>Explicación:</strong> ${q.explicacion}`;
-                } else {
-                    feedback.className = "feedback incorrect";
-                    feedback.innerHTML = `❌ Incorrecta. <br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
-                }
+            labels.forEach(label => {
+                label.classList.add("disabled");
             });
 
-            const total = preguntas.length;
-            const nota = ((aciertos / total) * 10).toFixed(2);
-            const resultBox = document.getElementById("resultBox");
-            const scoreText = document.getElementById("scoreText");
-            const scoreMessage = document.getElementById("scoreMessage");
+            opciones.forEach(input => {
+                input.disabled = true;
+            });
 
-            scoreText.innerHTML = `<strong>Aciertos:</strong> ${aciertos} de ${total} · <strong>Nota:</strong> ${nota}/10`;
-
-            if (aciertos >= 48) {
-                scoreMessage.textContent = "Muy bien. Llevas la UF2 muy fuerte para examen.";
-            } else if (aciertos >= 39) {
-                scoreMessage.textContent = "Buen nivel. Repasa los fallos y puedes sacar muy buena nota.";
-            } else if (aciertos >= 30) {
-                scoreMessage.textContent = "Vas bien, pero conviene repasar RAID, tipos de backup, almacenamiento en red y regla 3-2-1.";
+            if (valor === q.correcta) {
+                aciertos++;
+                document.getElementById(`label-${index}-${valor}`).classList.add("correct-option");
+                feedback.className = "feedback correct";
+                feedback.innerHTML = `✅ Correcta. <strong>Explicación:</strong> ${q.explicacion}`;
             } else {
-                scoreMessage.textContent = "Necesitas repasar más. Empieza por el esquema visual y vuelve a hacer el test.";
+                document.getElementById(`label-${index}-${valor}`).classList.add("incorrect-option");
+                document.getElementById(`label-${index}-${q.correcta}`).classList.add("correct-option");
+                feedback.className = "feedback incorrect";
+                feedback.innerHTML = `❌ Incorrecta.<br><strong>Respuesta correcta:</strong> ${q.correcta}) ${q.opciones[q.correcta]}<br><strong>Explicación:</strong> ${q.explicacion}`;
             }
 
-            resultBox.style.display = "block";
-            resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+            actualizarMarcador();
         }
 
         function reiniciarTest() {
-            document.getElementById("quizForm").reset();
-            document.querySelectorAll(".feedback").forEach(f => {
-                f.className = "feedback";
-                f.innerHTML = "";
+            aciertos = 0;
+            respondidas = 0;
+
+            for (let i = 0; i < respuestasUsuario.length; i++) {
+                respuestasUsuario[i] = null;
+            }
+
+            renderQuiz();
+            actualizarMarcador();
+            window.scrollTo({
+                top: document.getElementById("test").offsetTop - 20,
+                behavior: "smooth"
             });
-            document.getElementById("resultBox").style.display = "none";
-            window.scrollTo({ top: document.getElementById("test").offsetTop - 20, behavior: "smooth" });
         }
 
         renderQuiz();
+        actualizarMarcador();
     </script>
 </body>
+
 </html>
