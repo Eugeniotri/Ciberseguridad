@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repaso UF7 - Criptografía</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --card-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --ok: #22c55e;
+      --bad: #ef4444;
+      --warn: #f59e0b;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 32px 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(6px);
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+      color: #fff;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 900px;
+      margin-inline: auto;
+    }
+
+    nav {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #fff;
+      background: #0369a1;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 60px;
+    }
+
+    .card {
+      background: rgba(17, 24, 39, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #f8fafc;
+      border-left: 5px solid var(--accent);
+      padding-left: 12px;
+    }
+
+    h3 {
+      color: #cbd5e1;
+      margin-top: 22px;
+    }
+
+    .highlight {
+      background: rgba(56, 189, 248, 0.12);
+      border-left: 4px solid var(--accent);
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .danger {
+      background: rgba(239, 68, 68, 0.12);
+      border-left: 4px solid var(--bad);
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .success {
+      background: rgba(34, 197, 94, 0.12);
+      border-left: 4px solid var(--ok);
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    ul {
+      padding-left: 22px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .mini {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(56,189,248,.12);
+      color: #bae6fd;
+      font-size: .85rem;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    .question {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .question p {
+      margin-top: 0;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .options label {
+      display: block;
+      padding: 10px 12px;
+      margin: 8px 0;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #111827;
+    }
+
+    .options input {
+      margin-right: 8px;
+    }
+
+    button {
+      background: #0284c7;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+
+    button:hover { background: #0369a1; }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      border: 1px solid var(--border);
+    }
+
+    .feedback.ok {
+      display: block;
+      background: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .feedback.bad {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    #scoreBoard {
+      position: sticky;
+      bottom: 12px;
+      background: rgba(2,6,23,0.92);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .score {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 30px 10px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.55rem; }
+      .card { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Repaso UF7 - Criptografía</h1>
+    <p>Resumen de los puntos más importantes que hemos trabajado y test interactivo con corrección inmediata para repasar antes del examen.</p>
+    <nav>
+      <a href="#resumen">Resumen</a>
+      <a href="#trampas">Trampas de examen</a>
+      <a href="#test">Test interactivo</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="resumen" class="card">
+      <h2>1. Fundamentos de criptografía</h2>
+      <div class="highlight"><strong>Definición:</strong> la criptografía protege la información mediante algoritmos y claves para evitar accesos no autorizados.</div>
+      <div class="grid">
+        <div class="mini">
+          <h3>Confidencialidad</h3>
+          <p>Solo los usuarios autorizados pueden leer la información.</p>
+        </div>
+        <div class="mini">
+          <h3>Integridad</h3>
+          <p>Garantiza que los datos no han sido modificados.</p>
+        </div>
+        <div class="mini">
+          <h3>Autenticación</h3>
+          <p>Permite comprobar quién envía o recibe la información.</p>
+        </div>
+        <div class="mini">
+          <h3>No repudio</h3>
+          <p>Impide que alguien niegue haber enviado o firmado algo.</p>
+        </div>
+      </div>
+      <div class="success"><strong>Para memorizar:</strong> CIA + N = Confidencialidad, Integridad, Autenticación y No repudio.</div>
+    </section>
+
+    <section class="card">
+      <h2>2. Criptografía clásica</h2>
+      <ul>
+        <li><strong>Cifrado César:</strong> desplaza letras un número fijo de posiciones.</li>
+        <li><strong>Atbash:</strong> invierte el alfabeto. No usa clave.</li>
+        <li><strong>Playfair:</strong> cifra por pares de letras usando una matriz 5x5.</li>
+        <li><strong>Enigma:</strong> máquina de rotores; cambiaba el cifrado en cada pulsación.</li>
+      </ul>
+      <div class="danger"><strong>Importante de examen:</strong> César y Atbash son muy débiles. Playfair cifra por pares. Enigma fue rota por el equipo de Alan Turing.</div>
+    </section>
+
+    <section class="card">
+      <h2>3. Cifrado simétrico</h2>
+      <p><strong>Idea clave:</strong> usa la misma clave para cifrar y descifrar.</p>
+      <ul>
+        <li><strong>Ventaja:</strong> es rápido y eficiente.</li>
+        <li><strong>Problema principal:</strong> la distribución segura de la clave.</li>
+        <li><strong>AES:</strong> estándar actual.</li>
+        <li><strong>DES:</strong> obsoleto e inseguro.</li>
+      </ul>
+      <span class="tag">1 sola clave</span>
+      <span class="tag">rápido</span>
+      <span class="tag">problema: envío de clave</span>
+    </section>
+
+    <section class="card">
+      <h2>4. Cifrado asimétrico</h2>
+      <p><strong>Idea clave:</strong> usa un par de claves:</p>
+      <ul>
+        <li><strong>Clave pública:</strong> se comparte.</li>
+        <li><strong>Clave privada:</strong> la guarda el propietario.</li>
+      </ul>
+      <div class="highlight"><strong>Regla básica:</strong> lo que se cifra con una clave se descifra con la otra.</div>
+      <ul>
+        <li>Para <strong>confidencialidad</strong>, se cifra con la <strong>clave pública del receptor</strong>.</li>
+        <li>Para <strong>autenticación</strong>, se usa la <strong>clave privada del emisor</strong>.</li>
+      </ul>
+      <p><strong>Algoritmos importantes:</strong> RSA, Diffie-Hellman, ECC.</p>
+      <div class="danger"><strong>Ojo:</strong> Diffie-Hellman sirve para intercambio seguro de claves, no para hash.</div>
+    </section>
+
+    <section class="card">
+      <h2>5. Funciones hash</h2>
+      <p>Una función hash genera una huella digital de tamaño fijo a partir de unos datos.</p>
+      <ul>
+        <li><strong>Sirve para:</strong> verificar la integridad.</li>
+        <li><strong>No sirve para:</strong> cifrar o descifrar.</li>
+        <li><strong>Irreversible:</strong> no se puede reconstruir el original a partir del hash.</li>
+        <li><strong>Determinista:</strong> mismo mensaje → mismo hash.</li>
+        <li><strong>Efecto avalancha:</strong> un pequeño cambio produce un hash muy distinto.</li>
+      </ul>
+      <p><strong>Algoritmos:</strong> MD5 (inseguro), SHA-256 (seguro), bcrypt y Argon2 (muy usados para contraseñas).</p>
+      <div class="success"><strong>Frase de examen:</strong> Hash = integridad, no confidencialidad.</div>
+    </section>
+
+    <section class="card">
+      <h2>6. Firma digital</h2>
+      <ul>
+        <li>Se calcula el <strong>hash del documento</strong>.</li>
+        <li>Ese hash se cifra con la <strong>clave privada del emisor</strong>.</li>
+        <li>El receptor lo comprueba con la <strong>clave pública del emisor</strong>.</li>
+      </ul>
+      <div class="highlight"><strong>La firma digital garantiza:</strong> autenticidad e integridad.</div>
+      <div class="danger"><strong>Trampa típica:</strong> no se firma todo el documento, se firma el hash del documento.</div>
+    </section>
+
+    <section class="card">
+      <h2>7. PKI y certificados digitales</h2>
+      <ul>
+        <li><strong>PKI:</strong> infraestructura que gestiona claves y certificados digitales.</li>
+        <li><strong>CA:</strong> emite y firma certificados.</li>
+        <li><strong>RA:</strong> verifica la identidad del solicitante.</li>
+        <li><strong>VA:</strong> comprueba si el certificado sigue siendo válido.</li>
+        <li><strong>Certificado digital:</strong> vincula identidad + clave pública.</li>
+      </ul>
+      <div class="highlight"><strong>Importante:</strong> un certificado autofirmado sirve para pruebas, pero no genera confianza real.</div>
+    </section>
+
+    <section id="trampas" class="card">
+      <h2>Trampas típicas de examen</h2>
+      <ul>
+        <li><strong>Hash</strong> no cifra ni descifra.</li>
+        <li><strong>Firma digital</strong> no da confidencialidad por sí sola.</li>
+        <li><strong>Confidencialidad</strong> ≠ <strong>autenticidad</strong>.</li>
+        <li><strong>AES</strong> es simétrico; <strong>RSA</strong> es asimétrico.</li>
+        <li><strong>DES</strong> ya no es seguro.</li>
+        <li><strong>Atbash</strong> no usa clave.</li>
+        <li><strong>Playfair</strong> cifra por pares de letras.</li>
+        <li><strong>HTTPS</strong> usa SSL/TLS.</li>
+        <li><strong>HMAC</strong> = integridad + autenticación usando hash y clave secreta.</li>
+        <li><strong>Diffie-Hellman</strong> = intercambio seguro de claves.</li>
+      </ul>
+    </section>
+
+    <section id="test" class="card">
+      <h2>Test interactivo de repaso</h2>
+      <p>Marca una respuesta y pulsa <strong>Comprobar</strong>. Si fallas, la página te dirá la correcta y el motivo.</p>
+      <div id="quizContainer"></div>
+      <div id="scoreBoard">
+        <div class="score">Aciertos: <span id="correctCount">0</span> / <span id="totalCount">0</span></div>
+        <button id="resetBtn" type="button">Reiniciar test</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Repaso UF7 - Criptografía. Hecho para estudiar antes del examen.
+  </footer>
+
+  <script>
+    const questions = [
+      {
+        q: '1. ¿Qué hace el protocolo HMAC en la seguridad informática?',
+        options: [
+          'Garantizar la integridad y la autenticación de los datos mediante funciones hash y claves secretas.',
+          'Proteger el tráfico de la red en conexiones wifi públicas.',
+          'Cifrar discos duros completos para proteger los datos almacenados.'
+        ],
+        correct: 0,
+        explain: 'HMAC combina una función hash y una clave secreta para garantizar integridad y autenticación.'
+      },
+      {
+        q: '2. ¿Qué garantiza el no repudio en la criptografía?',
+        options: [
+          'Que los datos cifrados sean ilegibles para terceros.',
+          'Que solo el remitente pueda leer el mensaje cifrado.',
+          'Que un usuario no pueda negar haber enviado un mensaje firmado digitalmente.'
+        ],
+        correct: 2,
+        explain: 'El no repudio evita que el emisor niegue una acción realizada, normalmente gracias a la firma digital.'
+      },
+      {
+        q: '3. ¿Qué tecnología permite verificar la identidad de un servidor en una conexión segura?',
+        options: [
+          'Firewall.',
+          'VPN.',
+          'Certificado digital.'
+        ],
+        correct: 2,
+        explain: 'El certificado digital vincula una identidad con una clave pública y permite confiar en el servidor.'
+      },
+      {
+        q: '4. ¿Qué infraestructura permite la gestión de claves y certificados digitales?',
+        options: [
+          'AES (Advanced Encryption Standard).',
+          'PKI (infraestructura de clave pública).',
+          'SSL/TLS.'
+        ],
+        correct: 1,
+        explain: 'PKI es la infraestructura que administra claves públicas, certificados y relaciones de confianza.'
+      },
+      {
+        q: '5. ¿Qué método se utiliza para verificar que un archivo descargado no ha sido modificado?',
+        options: [
+          'Comparación de su hash con el publicado por el proveedor.',
+          'Cifrado del archivo con una clave privada.',
+          'Uso de una VPN para proteger la descarga.'
+        ],
+        correct: 0,
+        explain: 'La comparación del hash permite verificar la integridad del archivo descargado.'
+      },
+      {
+        q: '6. ¿Cuál de los siguientes mecanismos se usa para verificar la autenticidad de un documento digital?',
+        options: [
+          'VPN (Red Privada Virtual).',
+          'Función hash.',
+          'Firma digital.'
+        ],
+        correct: 2,
+        explain: 'La firma digital verifica la autenticidad y también la integridad del documento.'
+      },
+      {
+        q: '7. ¿Qué permite la infraestructura de clave pública (PKI)?',
+        options: [
+          'Administrar claves y certificados digitales para la autenticación y el cifrado.',
+          'Acelerar la conexión a Internet mediante el cifrado de datos.',
+          'Proteger sistemas operativos contra ataques de malware.'
+        ],
+        correct: 0,
+        explain: 'La PKI gestiona certificados, claves y confianza para autenticación y cifrado.'
+      },
+      {
+        q: '8. ¿Cuál es la principal función de un certificado digital?',
+        options: [
+          'Almacenar claves de cifrado de forma segura.',
+          'Garantizar que un mensaje no ha sido interceptado.',
+          'Verificar la identidad de una entidad y su clave pública.'
+        ],
+        correct: 2,
+        explain: 'Un certificado vincula identidad y clave pública, y está firmado por una CA.'
+      },
+      {
+        q: '9. ¿Qué protocolo permite el intercambio seguro de claves en una red insegura?',
+        options: [
+          'HMAC.',
+          'SHA-256.',
+          'Diffie-Hellman.'
+        ],
+        correct: 2,
+        explain: 'Diffie-Hellman se usa para intercambiar claves de forma segura aunque el canal sea inseguro.'
+      },
+      {
+        q: '10. ¿Cuál es la función principal de la firma digital en un documento?',
+        options: [
+          'Verificar la autenticidad y la integridad del documento.',
+          'Asegurar que solo una persona específica pueda abrirlo.',
+          'Comprimir su tamaño para facilitar la transmisión.'
+        ],
+        correct: 0,
+        explain: 'La firma digital asegura autenticidad e integridad, no confidencialidad.'
+      },
+      {
+        q: '11. ¿Qué función tiene un hash criptográfico en la seguridad de la información?',
+        options: [
+          'Generar un valor único que permite verificar la integridad de los datos.',
+          'Asegurar que un mensaje solo pueda ser leído por el destinatario correcto.',
+          'Cifrar y descifrar mensajes de manera segura.'
+        ],
+        correct: 0,
+        explain: 'El hash sirve para comprobar integridad; no cifra ni descifra.'
+      },
+      {
+        q: '12. ¿Qué distingue al cifrado asimétrico del cifrado simétrico?',
+        options: [
+          'No requiere claves para funcionar.',
+          'Utiliza un par de claves: una pública y una privada.',
+          'Usa la misma clave para cifrar y descifrar datos.'
+        ],
+        correct: 1,
+        explain: 'El cifrado asimétrico usa dos claves; el simétrico usa una sola.'
+      },
+      {
+        q: '13. ¿Qué mecanismo de seguridad se utiliza en HTTPS para cifrar las comunicaciones?',
+        options: [
+          'VPN.',
+          'WAF.',
+          'SSL/TLS.'
+        ],
+        correct: 2,
+        explain: 'HTTPS utiliza SSL/TLS para proteger la comunicación entre cliente y servidor.'
+      },
+      {
+        q: '14. ¿Cuál de los siguientes algoritmos pertenece a la criptografía simétrica?',
+        options: [
+          'AES.',
+          'RSA.',
+          'Diffie-Hellman.'
+        ],
+        correct: 0,
+        explain: 'AES es simétrico. RSA es asimétrico y Diffie-Hellman es intercambio de claves.'
+      },
+      {
+        q: '15. ¿Cuál es el principal objetivo de la criptografía en la seguridad informática?',
+        options: [
+          'Reducir el tamaño de los archivos almacenados.',
+          'Acelerar la velocidad de transmisión de datos.',
+          'Proteger la información garantizando la confidencialidad, la integridad y la autenticación.'
+        ],
+        correct: 2,
+        explain: 'La criptografía protege la información a través de confidencialidad, integridad y autenticación.'
+      },
+      {
+        q: '16. ¿Qué afirmación es correcta sobre la firma digital?',
+        options: [
+          'Cifra todo el documento con la clave privada del emisor.',
+          'Cifra el hash del documento con la clave privada del emisor.',
+          'Cifra el documento con la clave pública del receptor para garantizar autenticidad.'
+        ],
+        correct: 1,
+        explain: 'La firma digital se crea cifrando el hash del documento con la clave privada del emisor.'
+      },
+      {
+        q: '17. ¿Cuál es el principal problema del cifrado simétrico?',
+        options: [
+          'Que no sirve para cifrar archivos.',
+          'La distribución segura de la clave compartida.',
+          'Que necesita certificados digitales obligatoriamente.'
+        ],
+        correct: 1,
+        explain: 'El mayor problema del cifrado simétrico es cómo compartir la clave de forma segura.'
+      },
+      {
+        q: '18. ¿Qué propiedad de las funciones hash provoca que un cambio mínimo en el mensaje genere un hash muy diferente?',
+        options: [
+          'Determinismo.',
+          'Efecto avalancha.',
+          'Compresión adaptativa.'
+        ],
+        correct: 1,
+        explain: 'El efecto avalancha hace que cambios mínimos alteren completamente el hash resultante.'
+      },
+      {
+        q: '19. ¿Qué opción describe correctamente un certificado autofirmado?',
+        options: [
+          'Está firmado por una CA reconocida mundialmente.',
+          'Es válido para generar confianza pública en cualquier navegador sin avisos.',
+          'Puede servir en pruebas, pero no ofrece confianza real porque no lo valida una CA externa.'
+        ],
+        correct: 2,
+        explain: 'Un certificado autofirmado puede usarse en laboratorio, pero no ofrece confianza pública.'
+      },
+      {
+        q: '20. Si A quiere enviar un mensaje confidencial a B usando cifrado asimétrico, ¿qué debe usar?',
+        options: [
+          'La clave privada de A.',
+          'La clave pública de B.',
+          'El hash del mensaje y la clave privada de B.'
+        ],
+        correct: 1,
+        explain: 'Para confidencialidad, el emisor cifra con la clave pública del receptor.'
+      },
+      {
+        q: '21. ¿Qué entidad de la PKI comprueba la identidad del solicitante antes de emitir un certificado?',
+        options: [
+          'RA (Autoridad de Registro).',
+          'VA (Autoridad de Validación).',
+          'Repositorio CRL.'
+        ],
+        correct: 0,
+        explain: 'La RA verifica la identidad del solicitante antes de que la CA emita el certificado.'
+      },
+      {
+        q: '22. ¿Qué algoritmo se considera inseguro hoy por problemas de colisiones?',
+        options: [
+          'SHA-256.',
+          'MD5.',
+          'AES-256.'
+        ],
+        correct: 1,
+        explain: 'MD5 es inseguro porque puede producir colisiones con relativa facilidad.'
+      },
+      {
+        q: '23. ¿Qué afirmación es correcta sobre Atbash?',
+        options: [
+          'Usa una clave secreta variable.',
+          'Invierte el alfabeto y no utiliza clave variable.',
+          'Cifra por pares de letras usando una matriz.'
+        ],
+        correct: 1,
+        explain: 'Atbash sustituye A por Z, B por Y, etc., y no usa clave variable.'
+      },
+      {
+        q: '24. ¿Qué componente de la PKI comprueba si un certificado ha sido revocado o ha caducado?',
+        options: [
+          'VA (Autoridad de Validación).',
+          'AES.',
+          'HMAC.'
+        ],
+        correct: 0,
+        explain: 'La autoridad de validación verifica el estado del certificado: vigencia, revocación y autenticidad.'
+      },
+      {
+        q: '25. ¿Qué combinación sería correcta para conseguir autenticidad e integridad en un documento, sin aportar por sí sola confidencialidad?',
+        options: [
+          'Hash + firma digital.',
+          'VPN + WPA3.',
+          'AES + clave pública del receptor.'
+        ],
+        correct: 0,
+        explain: 'El hash y la firma digital proporcionan integridad y autenticidad, pero no confidencialidad por sí solos.'
+      }
+    ];
+
+    const quizContainer = document.getElementById('quizContainer');
+    const correctCountEl = document.getElementById('correctCount');
+    const totalCountEl = document.getElementById('totalCount');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let score = 0;
+    const answered = new Set();
+
+    function renderQuiz() {
+      totalCountEl.textContent = questions.length;
+      quizContainer.innerHTML = '';
+
+      questions.forEach((item, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'question';
+
+        const title = document.createElement('p');
+        title.textContent = item.q;
+        wrapper.appendChild(title);
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options';
+
+        item.options.forEach((option, i) => {
+          const label = document.createElement('label');
+          label.innerHTML = `<input type="radio" name="q${index}" value="${i}"> ${option}`;
+          optionsDiv.appendChild(label);
+        });
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = 'Comprobar';
+
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback';
+
+        btn.addEventListener('click', () => {
+          const selected = wrapper.querySelector(`input[name="q${index}"]:checked`);
+          if (!selected) {
+            feedback.className = 'feedback bad';
+            feedback.innerHTML = 'Debes marcar una opción antes de comprobar.';
+            return;
+          }
+
+          const value = Number(selected.value);
+          const alreadyAnswered = answered.has(index);
+
+          if (value === item.correct) {
+            feedback.className = 'feedback ok';
+            feedback.innerHTML = `<strong>Correcto.</strong> ${item.explain}`;
+            if (!alreadyAnswered) {
+              score++;
+              answered.add(index);
+            }
+          } else {
+            feedback.className = 'feedback bad';
+            feedback.innerHTML = `<strong>Incorrecto.</strong> La respuesta correcta es: <strong>${String.fromCharCode(97 + item.correct)}) ${item.options[item.correct]}</strong><br>${item.explain}`;
+            if (!alreadyAnswered) answered.add(index);
+          }
+
+          correctCountEl.textContent = score;
+        });
+
+        wrapper.appendChild(optionsDiv);
+        wrapper.appendChild(btn);
+        wrapper.appendChild(feedback);
+        quizContainer.appendChild(wrapper);
+      });
+    }
+
+    resetBtn.addEventListener('click', () => {
+      score = 0;
+      answered.clear();
+      correctCountEl.textContent = '0';
+      renderQuiz();
+      window.scrollTo({ top: document.getElementById('test').offsetTop - 80, behavior: 'smooth' });
+    });
+
+    renderQuiz();
+  </script>
+</body>
+</html>

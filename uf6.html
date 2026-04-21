@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UF6 - Resumen y cuestionario</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --ok-bg: #ecfdf5;
+      --ok-border: #10b981;
+      --bad-bg: #fef2f2;
+      --bad-border: #ef4444;
+      --warn-bg: #eff6ff;
+      --warn-border: #3b82f6;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb, #60a5fa);
+      color: white;
+      padding: 36px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 900px;
+      opacity: .95;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 20px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      background: white;
+      color: var(--accent);
+      padding: 10px 14px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      font-weight: bold;
+      font-size: .95rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #0f172a;
+    }
+
+    h3 {
+      color: #1d4ed8;
+      margin-bottom: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    ul { padding-left: 20px; }
+
+    .qa-item {
+      border-left: 5px solid var(--warn-border);
+      background: var(--warn-bg);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .qa-item strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .question {
+      border: 1px solid #dbe4f0;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: #fcfdff;
+    }
+
+    .question p {
+      margin-top: 0;
+      font-weight: bold;
+    }
+
+    .options label {
+      display: block;
+      margin-bottom: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #f8fafc;
+      cursor: pointer;
+    }
+
+    .options input { margin-right: 8px; }
+
+    button {
+      border: none;
+      background: var(--accent);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    button:hover { opacity: .95; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .secondary {
+      background: #475569;
+    }
+
+    .result {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      display: none;
+      font-size: .95rem;
+    }
+
+    .correct {
+      background: var(--ok-bg);
+      border: 1px solid var(--ok-border);
+      color: #065f46;
+      display: block;
+    }
+
+    .incorrect {
+      background: var(--bad-bg);
+      border: 1px solid var(--bad-border);
+      color: #991b1b;
+      display: block;
+    }
+
+    .score {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: .92rem;
+      padding: 18px;
+    }
+
+    .pill {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: .85rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>UF6 - Aseguramiento de la ciberseguridad</h1>
+    <p>Resumen claro de los conceptos trabajados en clase, preguntas cortas tipo examen con respuesta breve y cuestionario interactivo con corrección inmediata.</p>
+  </header>
+
+  <div class="container">
+    <nav class="nav">
+      <a href="#resumen">Resumen</a>
+      <a href="#preguntas">Preguntas cortas</a>
+      <a href="#test">Cuestionario interactivo</a>
+    </nav>
+
+    <section id="resumen" class="card">
+      <span class="pill">Resumen de conceptos</span>
+      <h2>Conceptos principales de la UF6</h2>
+      <div class="grid">
+        <div>
+          <h3>IP, NAT y MAC</h3>
+          <ul>
+            <li><strong>IP:</strong> identifica un dispositivo en la red.</li>
+            <li><strong>IP privada:</strong> se usa dentro de la red local.</li>
+            <li><strong>IP pública:</strong> se usa para salir a Internet.</li>
+            <li><strong>NAT:</strong> traduce IP privada a IP pública.</li>
+            <li><strong>MAC:</strong> identificador físico único del dispositivo.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Puertos y servicios</h3>
+          <ul>
+            <li><strong>Puerto:</strong> puerta de entrada a un servicio.</li>
+            <li><strong>80:</strong> HTTP.</li>
+            <li><strong>443:</strong> HTTPS.</li>
+            <li><strong>22:</strong> SSH.</li>
+            <li><strong>20/21:</strong> FTP.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Monitorización y seguridad</h3>
+          <ul>
+            <li><strong>SNMP:</strong> gestión remota y centralizada de red.</li>
+            <li><strong>IDS:</strong> detecta intrusiones.</li>
+            <li><strong>IPS:</strong> detecta y bloquea ataques.</li>
+            <li><strong>Logs:</strong> registros de actividad del sistema.</li>
+            <li><strong>Nmap:</strong> escanea puertos y servicios.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Ingeniería social</h3>
+          <ul>
+            <li><strong>Phishing:</strong> engaño por correo o web falsa.</li>
+            <li><strong>Smishing:</strong> phishing por SMS.</li>
+            <li><strong>Vishing:</strong> phishing por llamada.</li>
+            <li><strong>Pharming:</strong> redirección a página falsa.</li>
+            <li><strong>Hoax:</strong> mensaje falso que se reenvía.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Spam y publicidad no deseada</h3>
+          <ul>
+            <li><strong>Spam:</strong> comunicación electrónica no deseada.</li>
+            <li><strong>Spim:</strong> spam por mensajería instantánea.</li>
+            <li><strong>Spamdexing:</strong> manipulación de buscadores.</li>
+            <li>Conviene no responder ni hacer clic en enlaces sospechosos.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Redes y modelo OSI</h3>
+          <ul>
+            <li><strong>Red:</strong> dispositivos conectados que comparten recursos.</li>
+            <li><strong>LAN:</strong> red local.</li>
+            <li><strong>MAN:</strong> red metropolitana.</li>
+            <li><strong>WAN:</strong> red de área amplia.</li>
+            <li>Las capas OSI organizan el envío de datos.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>WiFi y seguridad</h3>
+          <ul>
+            <li><strong>SSID:</strong> nombre de la red WiFi.</li>
+            <li><strong>WEP:</strong> inseguro y obsoleto.</li>
+            <li><strong>WPA / WPA2 / WPA3:</strong> protocolos de seguridad WiFi.</li>
+            <li><strong>WPA3:</strong> el más seguro.</li>
+            <li><strong>MAC spoofing:</strong> suplantación de MAC.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Certificado y firma</h3>
+          <ul>
+            <li><strong>Certificado digital:</strong> identifica a una persona o entidad.</li>
+            <li><strong>Firma electrónica:</strong> garantiza autenticidad e integridad.</li>
+            <li><strong>Clave pública:</strong> se comparte.</li>
+            <li><strong>Clave privada:</strong> se mantiene secreta.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Firewall y políticas</h3>
+          <ul>
+            <li><strong>Firewall:</strong> filtra tráfico entre redes o sistemas.</li>
+            <li><strong>Stateless:</strong> analiza paquetes sueltos.</li>
+            <li><strong>Stateful:</strong> analiza conexiones.</li>
+            <li><strong>Política restrictiva:</strong> más segura.</li>
+            <li><strong>DROP:</strong> bloquea sin responder. <strong>REJECT:</strong> bloquea y responde.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Disponibilidad e incidentes</h3>
+          <ul>
+            <li><strong>SLA:</strong> nivel de disponibilidad del servicio.</li>
+            <li><strong>Fases:</strong> pruebas, preproducción y producción.</li>
+            <li>Un incidente debe notificarse, verificarse, contenerse y documentarse.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="preguntas" class="card">
+      <span class="pill">Preguntas cortas tipo examen</span>
+      <h2>Preguntas y respuestas breves</h2>
+
+      <div class="qa-item"><strong>¿Qué es una dirección IP?</strong>Identificador único de un dispositivo en la red.</div>
+      <div class="qa-item"><strong>¿Qué es NAT?</strong>Traducción de IP privada a IP pública.</div>
+      <div class="qa-item"><strong>¿Qué es una MAC?</strong>Identificador físico único de un dispositivo.</div>
+      <div class="qa-item"><strong>¿Qué es un puerto?</strong>Puerta de entrada a un servicio.</div>
+      <div class="qa-item"><strong>¿Qué es HTTP?</strong>Protocolo web sin cifrado.</div>
+      <div class="qa-item"><strong>¿Qué es HTTPS?</strong>Versión segura de HTTP con cifrado SSL/TLS.</div>
+      <div class="qa-item"><strong>¿Qué es SSH?</strong>Protocolo de acceso remoto seguro.</div>
+      <div class="qa-item"><strong>¿Qué es FTP?</strong>Protocolo de transferencia de archivos.</div>
+      <div class="qa-item"><strong>¿Qué es SNMP?</strong>Protocolo de gestión remota y centralizada de dispositivos de red.</div>
+      <div class="qa-item"><strong>¿Qué es la ingeniería social?</strong>Manipulación del usuario para obtener información.</div>
+      <div class="qa-item"><strong>¿Qué es phishing?</strong>Suplantación de identidad para robar datos.</div>
+      <div class="qa-item"><strong>¿Qué es smishing?</strong>Phishing mediante SMS.</div>
+      <div class="qa-item"><strong>¿Qué es vishing?</strong>Phishing por llamada telefónica.</div>
+      <div class="qa-item"><strong>¿Qué es spam?</strong>Comunicación electrónica no deseada.</div>
+      <div class="qa-item"><strong>¿Qué es una red?</strong>Conjunto de dispositivos conectados que comparten información y recursos.</div>
+      <div class="qa-item"><strong>¿Para qué sirven las capas OSI?</strong>Para organizar la comunicación de datos en la red.</div>
+      <div class="qa-item"><strong>¿Qué es monitorización?</strong>Control del estado y funcionamiento de la red.</div>
+      <div class="qa-item"><strong>¿Qué es sniffing?</strong>Captura de tráfico de red.</div>
+      <div class="qa-item"><strong>¿Qué es SSID?</strong>Nombre que identifica una red WiFi.</div>
+      <div class="qa-item"><strong>¿Qué es MAC spoofing?</strong>Suplantar la dirección MAC de un dispositivo.</div>
+      <div class="qa-item"><strong>¿Qué es un certificado digital?</strong>Documento electrónico que identifica en Internet.</div>
+      <div class="qa-item"><strong>¿Qué es una firma electrónica?</strong>Método digital que garantiza autenticidad e integridad.</div>
+      <div class="qa-item"><strong>Diferencia entre certificado y firma</strong>El certificado identifica; la firma valida.</div>
+      <div class="qa-item"><strong>¿Qué es un firewall?</strong>Sistema que filtra el tráfico de red.</div>
+      <div class="qa-item"><strong>Diferencia entre stateless y stateful</strong>Stateless analiza paquetes; stateful analiza conexiones.</div>
+      <div class="qa-item"><strong>¿Qué es IDS / IPS?</strong>IDS detecta; IPS detecta y bloquea.</div>
+      <div class="qa-item"><strong>¿Qué son los logs?</strong>Registros de actividad del sistema o red.</div>
+      <div class="qa-item"><strong>¿Qué política de firewall es más segura?</strong>La política restrictiva.</div>
+      <div class="qa-item"><strong>DROP vs REJECT</strong>DROP bloquea sin responder; REJECT bloquea y responde.</div>
+      <div class="qa-item"><strong>¿Qué es SLA?</strong>Nivel de disponibilidad del servicio.</div>
+      <div class="qa-item"><strong>Fases de un sistema seguro</strong>Pruebas, preproducción y producción.</div>
+      <div class="qa-item"><strong>¿Qué es producción?</strong>El sistema real en funcionamiento.</div>
+      <div class="qa-item"><strong>¿Por qué es importante el orden de arranque?</strong>Para evitar fallos y sobrecargas.</div>
+      <div class="qa-item"><strong>Pasos ante un incidente</strong>Notificar, verificar, recoger datos, contener, solucionar y documentar.</div>
+      <div class="qa-item"><strong>¿Qué debe incluir un informe?</strong>Descripción, resumen, análisis, plan de acción y anexos.</div>
+      <div class="qa-item"><strong>¿Qué es Nmap?</strong>Herramienta de escaneo de red que detecta puertos y servicios.</div>
+    </section>
+
+    <section id="test" class="card">
+      <span class="pill">Cuestionario interactivo</span>
+      <h2>Test de la UF6</h2>
+      <p>Marca una opción en cada pregunta y pulsa <strong>Corregir cuestionario</strong>. Verás si está bien o mal y la respuesta correcta.</p>
+      <form id="quizForm"></form>
+      <div class="actions">
+        <button type="button" id="checkBtn">Corregir cuestionario</button>
+        <button type="button" id="resetBtn" class="secondary">Reiniciar</button>
+      </div>
+      <div id="score" class="score"></div>
+    </section>
+  </div>
+
+  <footer>
+    Material de repaso UF6 preparado en formato HTML interactivo.
+  </footer>
+
+  <script>
+    const questions = [
+      {
+        q: '1. ¿Qué función cumple el firewall en una red?',
+        options: ['Encriptar mensajes.', 'Almacenar datos de respaldo.', 'Filtrar tráfico entre redes.'],
+        correct: 2,
+        explanation: 'Un firewall controla el tráfico, permitiendo o bloqueando conexiones según reglas.'
+      },
+      {
+        q: '2. ¿Cuál de las siguientes técnicas pertenece a la ingeniería social?',
+        options: ['DDoS.', 'Phishing.', 'Brute force.'],
+        correct: 1,
+        explanation: 'El phishing engaña al usuario para robar información.'
+      },
+      {
+        q: '3. ¿Qué significa SSID en una red wifi?',
+        options: ['Sistema de cifrado inalámbrico.', 'Controlador de señal.', 'Identificador de red.'],
+        correct: 2,
+        explanation: 'SSID es el nombre que identifica la red WiFi.'
+      },
+      {
+        q: '4. ¿Qué capa del modelo OSI se encarga del cifrado y la compresión de datos?',
+        options: ['Presentación.', 'Aplicación.', 'Transporte.'],
+        correct: 0,
+        explanation: 'La capa de presentación trata formato, compresión y cifrado.'
+      },
+      {
+        q: '5. ¿Qué puerto se usa comúnmente para HTTPS?',
+        options: ['80.', '443.', '110.'],
+        correct: 1,
+        explanation: 'HTTPS usa por defecto el puerto 443.'
+      },
+      {
+        q: '6. ¿Qué hace el protocolo NAT?',
+        options: ['Analiza malware.', 'Traduce direcciones IP.', 'Encripta emails.'],
+        correct: 1,
+        explanation: 'NAT traduce una IP privada a una IP pública o viceversa.'
+      },
+      {
+        q: '7. ¿Cuál de estas es una recomendación para evitar el spam?',
+        options: ['Usar cuentas distintas para diferentes usos.', 'Responder a correos desconocidos.', 'Publicar la dirección de correo en foros y redes sociales.'],
+        correct: 0,
+        explanation: 'Usar correos diferentes reduce la exposición al spam.'
+      },
+      {
+        q: '8. ¿Qué herramienta permite detectar intrusiones en la red?',
+        options: ['SNMP.', 'IDS.', 'Linux Mint.'],
+        correct: 1,
+        explanation: 'IDS significa sistema de detección de intrusiones.'
+      },
+      {
+        q: '9. ¿Cuál de estas herramientas sirve para escanear puertos y servicios?',
+        options: ['Nmap.', 'Kali Linux.', 'Wireshark.'],
+        correct: 0,
+        explanation: 'Nmap escanea hosts, puertos y servicios.'
+      },
+      {
+        q: '10. ¿Qué protocolo permite la gestión remota y centralizada de dispositivos de red?',
+        options: ['SNMP.', 'FTP.', 'HTTPS.'],
+        correct: 0,
+        explanation: 'SNMP se usa para administrar y monitorizar dispositivos de red.'
+      },
+      {
+        q: '11. ¿Qué tipo de dirección IP se asigna automáticamente mediante DHCP?',
+        options: ['Dinámica.', 'Estática.', 'Reservada.'],
+        correct: 0,
+        explanation: 'DHCP asigna IPs dinámicas automáticamente.'
+      },
+      {
+        q: '12. ¿Qué garantiza un certificado digital?',
+        options: ['La identidad del emisor.', 'La disponibilidad del servidor.', 'La velocidad de conexión.'],
+        correct: 0,
+        explanation: 'El certificado digital verifica la identidad.'
+      },
+      {
+        q: '13. ¿Qué define mejor una red ad-hoc?',
+        options: ['Usa conexiones por cable.', 'Los dispositivos conectan directamente.', 'Usa un router central.'],
+        correct: 1,
+        explanation: 'En una red ad-hoc los dispositivos se conectan entre sí sin punto de acceso central.'
+      },
+      {
+        q: '14. ¿Qué tipo de firma tiene el mayor valor legal en la UE?',
+        options: ['Simple.', 'Especial.', 'Cualificada.'],
+        correct: 2,
+        explanation: 'La firma cualificada es la de mayor valor legal.'
+      },
+      {
+        q: '15. ¿Cuál es el principal problema del protocolo WEP?',
+        options: ['Tiene una encriptación débil.', 'Es lento.', 'Solo funciona en servidores.'],
+        correct: 0,
+        explanation: 'WEP es inseguro porque su cifrado es vulnerable.'
+      },
+      {
+        q: '16. ¿Qué hace un IDS?',
+        options: ['Bloquea ataques automáticamente.', 'Detecta intrusiones.', 'Cifra datos.'],
+        correct: 1,
+        explanation: 'Un IDS detecta intrusiones; quien bloquea es el IPS.'
+      },
+      {
+        q: '17. ¿Cuál es el protocolo más seguro para WiFi actualmente?',
+        options: ['WEP.', 'WPA2.', 'WPA3.'],
+        correct: 2,
+        explanation: 'WPA3 es el estándar WiFi más seguro de los mencionados.'
+      },
+      {
+        q: '18. ¿Qué significa que un puerto esté abierto?',
+        options: ['Está desactivado.', 'Permite comunicación con un servicio.', 'Está cifrado.'],
+        correct: 1,
+        explanation: 'Un puerto abierto indica que hay un servicio escuchando.'
+      },
+      {
+        q: '19. ¿Qué herramienta analiza el tráfico de red?',
+        options: ['Nmap.', 'Wireshark.', 'FTP.'],
+        correct: 1,
+        explanation: 'Wireshark captura y analiza tráfico de red.'
+      },
+      {
+        q: '20. ¿Qué tipo de firewall analiza conexiones completas?',
+        options: ['Stateless.', 'Stateful.', 'Físico.'],
+        correct: 1,
+        explanation: 'Stateful analiza el estado de las conexiones, no solo paquetes sueltos.'
+      },
+      {
+        q: '21. ¿Qué es una VPN?',
+        options: ['Un antivirus.', 'Una red cifrada sobre Internet.', 'Un tipo de router.'],
+        correct: 1,
+        explanation: 'Una VPN crea un túnel cifrado sobre Internet.'
+      },
+      {
+        q: '22. ¿Qué significa SLA?',
+        options: ['Sistema de seguridad activo.', 'Nivel de disponibilidad del servicio.', 'Protocolo de red.'],
+        correct: 1,
+        explanation: 'SLA mide el nivel de disponibilidad o servicio acordado.'
+      },
+      {
+        q: '23. ¿Qué ataque consiste en sobrecargar un servidor?',
+        options: ['Phishing.', 'DoS.', 'Spoofing.'],
+        correct: 1,
+        explanation: 'DoS busca dejar un servicio inaccesible por sobrecarga.'
+      },
+      {
+        q: '24. ¿Qué protocolo usa el puerto 22?',
+        options: ['HTTP.', 'FTP.', 'SSH.'],
+        correct: 2,
+        explanation: 'SSH usa el puerto 22 para acceso remoto seguro.'
+      },
+      {
+        q: '25. ¿Qué hace un IPS?',
+        options: ['Solo detecta ataques.', 'Detecta y bloquea ataques.', 'Solo registra información.'],
+        correct: 1,
+        explanation: 'IPS detecta y además actúa para bloquear o mitigar el ataque.'
+      }
+    ];
+
+    const quizForm = document.getElementById('quizForm');
+    const scoreBox = document.getElementById('score');
+
+    function renderQuiz() {
+      quizForm.innerHTML = '';
+      questions.forEach((item, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'question';
+
+        const title = document.createElement('p');
+        title.textContent = item.q;
+        wrapper.appendChild(title);
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options';
+
+        item.options.forEach((opt, optIndex) => {
+          const label = document.createElement('label');
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = `q${index}`;
+          input.value = optIndex;
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(opt));
+          optionsDiv.appendChild(label);
+        });
+
+        const result = document.createElement('div');
+        result.className = 'result';
+        result.id = `result-${index}`;
+
+        wrapper.appendChild(optionsDiv);
+        wrapper.appendChild(result);
+        quizForm.appendChild(wrapper);
+      });
+    }
+
+    function checkQuiz() {
+      let score = 0;
+
+      questions.forEach((item, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const result = document.getElementById(`result-${index}`);
+
+        if (!selected) {
+          result.className = 'result incorrect';
+          result.innerHTML = `No has respondido. <strong>Respuesta correcta:</strong> ${item.options[item.correct]}<br><em>${item.explanation}</em>`;
+          return;
+        }
+
+        const answer = Number(selected.value);
+        if (answer === item.correct) {
+          score++;
+          result.className = 'result correct';
+          result.innerHTML = `✅ Correcto. <strong>Respuesta:</strong> ${item.options[item.correct]}<br><em>${item.explanation}</em>`;
+        } else {
+          result.className = 'result incorrect';
+          result.innerHTML = `❌ Incorrecto. <strong>Respuesta correcta:</strong> ${item.options[item.correct]}<br><em>${item.explanation}</em>`;
+        }
+      });
+
+      scoreBox.style.display = 'block';
+      scoreBox.textContent = `Resultado: ${score} / ${questions.length} preguntas correctas.`;
+      scoreBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function resetQuiz() {
+      renderQuiz();
+      scoreBox.style.display = 'none';
+      scoreBox.textContent = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', checkQuiz);
+    document.getElementById('resetBtn').addEventListener('click', resetQuiz);
+
+    renderQuiz();
+  </script>
+</body>
+</html>
