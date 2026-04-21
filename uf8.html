@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UF8 - Legislación y Ciberseguridad</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --card: #0f1c33;
+      --card2: #132540;
+      --text: #e9f3ff;
+      --muted: #9fb4d1;
+      --line: rgba(126, 231, 255, 0.18);
+      --primary: #4fd1ff;
+      --primary2: #7c5cff;
+      --ok: #51e39d;
+      --bad: #ff6b6b;
+      --warn: #ffd166;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(79, 209, 255, 0.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(124, 92, 255, 0.12), transparent 25%),
+        linear-gradient(180deg, #040914 0%, var(--bg) 45%, #040914 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1150px, 92%);
+      margin: auto;
+    }
+
+    header {
+      padding: 48px 0 28px;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(7, 17, 31, 0.92);
+      backdrop-filter: blur(10px);
+    }
+
+    .badge {
+      display: inline-block;
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-weight: bold;
+      letter-spacing: .4px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 10px;
+    }
+
+    .lead {
+      color: var(--muted);
+      max-width: 900px;
+    }
+
+    nav {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    nav a {
+      border: 1px solid var(--line);
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      transition: .2s ease;
+    }
+
+    nav a:hover {
+      transform: translateY(-2px);
+      border-color: rgba(79, 209, 255, 0.45);
+    }
+
+    main {
+      padding: 30px 0 60px;
+    }
+
+    .card {
+      background: rgba(15, 28, 51, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.28);
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      margin-bottom: 16px;
+      color: white;
+    }
+
+    h3 {
+      margin: 18px 0 10px;
+      color: #d8e8ff;
+    }
+
+    p, li {
+      color: var(--text);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .mini {
+      background: var(--card2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .highlight, .warning, .success {
+      padding: 14px 16px;
+      border-radius: 14px;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+    }
+
+    .highlight {
+      background: rgba(79, 209, 255, 0.10);
+      border-left: 4px solid var(--primary);
+    }
+
+    .warning {
+      background: rgba(255, 209, 102, 0.10);
+      border-left: 4px solid var(--warn);
+    }
+
+    .success {
+      background: rgba(81, 227, 157, 0.10);
+      border-left: 4px solid var(--ok);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(79, 209, 255, 0.10);
+      color: #bdeeff;
+      margin: 5px 8px 0 0;
+      font-size: .9rem;
+    }
+
+    .question {
+      background: rgba(5, 10, 20, 0.42);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .question p {
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .options label {
+      display: block;
+      margin: 8px 0;
+      padding: 10px 12px;
+      border: 1px solid rgba(126, 231, 255, 0.12);
+      border-radius: 10px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .options input {
+      margin-right: 8px;
+    }
+
+    button {
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      color: #03111f;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 12px;
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .feedback.ok {
+      display: block;
+      background: rgba(81, 227, 157, 0.10);
+      border-color: rgba(81, 227, 157, 0.22);
+    }
+
+    .feedback.bad {
+      display: block;
+      background: rgba(255, 107, 107, 0.10);
+      border-color: rgba(255, 107, 107, 0.22);
+    }
+
+    #scoreBoard {
+      position: sticky;
+      bottom: 12px;
+      margin-top: 26px;
+      background: rgba(4, 9, 20, 0.95);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .score {
+      font-weight: bold;
+      font-size: 1.05rem;
+    }
+
+    footer {
+      padding: 30px 0 50px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 700px) {
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.35rem; }
+      .card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <span class="badge">UF8 · Legislación</span>
+      <h1>UF8 · Legislación y ciberseguridad</h1>
+      <p class="lead">Resumen ultra directo para examen + cuestionario interactivo con corrección inmediata. Centrado en lo que más suele caer en tipo test.</p>
+      <nav>
+        <a href="#resumen">Resumen</a>
+        <a href="#articulos">Artículos clave</a>
+        <a href="#rgpd">RGPD</a>
+        <a href="#lssice">LSSICE</a>
+        <a href="#test">Test UF8</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section id="resumen" class="card">
+        <h2>1. Lo más importante de examen</h2>
+        <div class="grid">
+          <div class="mini">
+            <h3>No existe “delito informático” como tal</h3>
+            <p>Lo correcto es hablar de <strong>delitos cometidos usando tecnología</strong>.</p>
+          </div>
+          <div class="mini">
+            <h3>Artículos clave del Código Penal</h3>
+            <p>Los más preguntables son <strong>197, 197 bis, 199.2, 248.2, 256, 264, 264.2, 264 ter, 270, 278, 286 y 401</strong>.</p>
+          </div>
+          <div class="mini">
+            <h3>RGPD y LOPDGDD</h3>
+            <p>Protegen <strong>datos personales</strong>, derechos de los usuarios y obligaciones de las empresas.</p>
+          </div>
+          <div class="mini">
+            <h3>LSSICE</h3>
+            <p>Regula <strong>comercio electrónico, servicios por Internet y spam</strong>.</p>
+          </div>
+        </div>
+        <div class="warning"><strong>Idea base:</strong> que algo se pueda hacer técnicamente no significa que sea legal.</div>
+      </section>
+
+      <section id="articulos" class="card">
+        <h2>2. Artículos y delitos que debes memorizar</h2>
+        <ul>
+          <li><strong>Art. 197 CP</strong> → delitos contra la intimidad, acceso a datos, correos, secretos personales.</li>
+          <li><strong>Art. 197 bis CP</strong> → acceso no autorizado a sistemas informáticos e interceptación de comunicaciones.</li>
+          <li><strong>Art. 199.2 CP</strong> → revelación de secretos personales por un profesional.</li>
+          <li><strong>Art. 248.2 CP</strong> → estafa informática, phishing y fraude.</li>
+          <li><strong>Art. 256 CP</strong> → uso indebido de equipos o telecomunicaciones, por ejemplo wifi ajeno si hay perjuicio.</li>
+          <li><strong>Art. 264 CP</strong> → daños informáticos: destruir, alterar o inutilizar datos o sistemas.</li>
+          <li><strong>Art. 264.2 CP</strong> → ataques que inhabilitan servicios o sistemas, típico <strong>DDoS</strong>.</li>
+          <li><strong>Art. 264 ter CP</strong> → creación y difusión de malware.</li>
+          <li><strong>Art. 270 CP</strong> → propiedad intelectual: copia, distribución o uso ilegal de obras o software.</li>
+          <li><strong>Art. 278 CP</strong> → espionaje industrial y secretos empresariales.</li>
+          <li><strong>Art. 286 CP</strong> → fraude económico a prestadores de servicios (plataformas, accesos, saltar protecciones).</li>
+          <li><strong>Art. 401 CP</strong> → suplantación de identidad.</li>
+        </ul>
+        <div class="success"><strong>Memoriza esto tal cual:</strong> 197 intimidad, 248 estafa, 256 wifi/equipos, 264 daños, 270 propiedad intelectual, 278 secretos empresariales.</div>
+      </section>
+
+      <section class="card">
+        <h2>3. Delitos que más salen en test</h2>
+        <div class="grid">
+          <div class="mini">
+            <h3>Contra la intimidad</h3>
+            <p>Leer el correo ajeno, interceptar comunicaciones, acceder a datos sin permiso.</p>
+          </div>
+          <div class="mini">
+            <h3>Estafa informática</h3>
+            <p>Phishing, pharming, transferencias fraudulentas, manipulación informática con ánimo de lucro.</p>
+          </div>
+          <div class="mini">
+            <h3>Daños informáticos</h3>
+            <p>Ransomware, virus, borrado de datos, DDoS, sabotaje de sistemas.</p>
+          </div>
+          <div class="mini">
+            <h3>Otros muy preguntables</h3>
+            <p>Ingeniería social, grooming, skimming, ciberacoso, spoofing, criptojacking.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="rgpd" class="card">
+        <h2>4. RGPD y LOPDGDD</h2>
+        <h3>Qué son datos personales</h3>
+        <p>Cualquier dato que identifique o pueda identificar a una persona: <strong>nombre, DNI, dirección, email, IP, ingresos, historial médico</strong>.</p>
+
+        <h3>Datos especialmente protegidos</h3>
+        <p>Salud, ideología, religión, origen racial, orientación sexual, datos biométricos, afiliación sindical, etc.</p>
+
+        <h3>Bases legales para tratar datos</h3>
+        <ul>
+          <li>Consentimiento</li>
+          <li>Contrato</li>
+          <li>Obligación legal</li>
+          <li>Intereses vitales</li>
+          <li>Interés público</li>
+          <li>Interés legítimo</li>
+        </ul>
+
+        <h3>Consentimiento válido</h3>
+        <p>Debe ser <strong>libre, específico, informado e inequívoco</strong>.</p>
+
+        <h3>Derechos del usuario</h3>
+        <p><strong>ARCO</strong>: acceso, rectificación, cancelación y oposición. Con RGPD se amplían con <strong>supresión/olvido, portabilidad y limitación</strong>.</p>
+
+        <h3>Plazos y sanciones</h3>
+        <ul>
+          <li>Responder solicitudes: <strong>1 mes</strong> (ampliable 2 más en casos complejos).</li>
+          <li>Notificación de brecha de datos: <strong>72 horas</strong>.</li>
+          <li>Multas RGPD: hasta <strong>20 millones € o 4 %</strong> de la facturación global.</li>
+        </ul>
+
+        <div class="highlight"><strong>Muy preguntable:</strong> la <strong>AEPD</strong> vela por el cumplimiento de la normativa de protección de datos en España.</div>
+      </section>
+
+      <section class="card">
+        <h2>5. Roles en protección de datos</h2>
+        <ul>
+          <li><strong>Responsable del tratamiento</strong> → decide para qué y cómo se usan los datos.</li>
+          <li><strong>Encargado del tratamiento</strong> → trata los datos por cuenta del responsable.</li>
+          <li><strong>DPO / Delegado de Protección de Datos</strong> → supervisa cumplimiento y asesora.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>6. Propiedad intelectual</h2>
+        <ul>
+          <li>Instalar o copiar software sin licencia puede ser delito.</li>
+          <li>Publicar contenido protegido sin permiso también.</li>
+          <li><strong>P2P no es ilegal</strong>; lo ilegal es el <strong>uso ilícito</strong> que hagas de él.</li>
+          <li>La copia privada no se aplica al software.</li>
+        </ul>
+        <div class="warning"><strong>Muy típico:</strong> GPL permite modificar y redistribuir manteniendo las condiciones de la licencia.</div>
+      </section>
+
+      <section id="lssice" class="card">
+        <h2>7. LSSICE, comercio electrónico, spam y firma electrónica</h2>
+        <h3>LSSICE</h3>
+        <p><strong>Ley 34/2002</strong>. Regula servicios en Internet, comercio electrónico, comunicaciones comerciales y obligaciones de las webs.</p>
+
+        <h3>Obligaciones básicas de una web / e-commerce</h3>
+        <ul>
+          <li>Identificación del titular</li>
+          <li>NIF, domicilio y contacto</li>
+          <li>Precios claros, impuestos y gastos de envío</li>
+          <li>Condiciones de contratación</li>
+          <li>Acuse de recibo del pedido</li>
+        </ul>
+
+        <h3>Spam</h3>
+        <p>No se puede enviar <strong>publicidad no solicitada</strong> sin consentimiento. Lo regulan la <strong>LSSICE</strong> y la <strong>LOPDGDD/RGPD</strong>.</p>
+
+        <h3>Firma electrónica</h3>
+        <ul>
+          <li><strong>Ley 59/2003</strong></li>
+          <li>Tipos: <strong>avanzada</strong> y <strong>reconocida</strong></li>
+          <li>Propiedades: <strong>autenticidad, integridad y no repudio</strong></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>8. Correo electrónico y buenas prácticas</h2>
+        <ul>
+          <li>El correo contiene datos personales y debe protegerse.</li>
+          <li>Sin medidas extra, un email puede viajar sin cifrar.</li>
+          <li>TLS protege la conexión.</li>
+          <li>PGP o S/MIME protegen el contenido.</li>
+          <li>Usar software actualizado, separar cuentas, cifrar y firmar correos sensibles.</li>
+        </ul>
+        <div class="success"><strong>Correo seguro =</strong> cifrado + integridad + autenticidad + no repudio.</div>
+      </section>
+
+      <section class="card">
+        <h2>9. Trampas típicas del examen</h2>
+        <ul>
+          <li>No existe “delito informático” como categoría única en el CP.</li>
+          <li>P2P no es ilegal; compartir contenido protegido sí puede serlo.</li>
+          <li>Acceder sin permiso a datos o emails ya puede ser delito, aunque sea “por curiosidad”.</li>
+          <li>Spam no es delito penal típico, pero sí está prohibido y sancionado por LSSICE/LOPDGDD.</li>
+          <li>La AEPD no es un ministerio ni un juzgado: es la autoridad de protección de datos.</li>
+          <li>Phishing y pharming no son lo mismo: en pharming te redirigen aunque escribas bien la web.</li>
+          <li>Keylogger registra teclado; sniffer captura tráfico; troyano se oculta en software aparente.</li>
+        </ul>
+      </section>
+
+      <section id="test" class="card">
+        <h2>10. Test UF8 interactivo</h2>
+        <p class="muted">Incluye las preguntas que has practicado aquí y 10 extra para pillar. Si fallas, te da la correcta directamente.</p>
+        <div id="quizContainer"></div>
+        <div id="scoreBoard">
+          <div class="score">Aciertos: <span id="correctCount">0</span> / <span id="totalCount">0</span></div>
+          <button id="resetBtn" type="button">Reiniciar test</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    UF8 · Legislación · Resumen + test tipo examen
+  </footer>
+
+  <script>
+    const questions = [
+      {
+        q: '1. ¿Qué artículo del Código Penal castiga la creación y difusión de malware?',
+        options: ['Art. 197 bis.', 'Art. 264 ter.', 'Art. 248.2.'],
+        correct: 1,
+        explain: 'El artículo 264 ter castiga la creación, distribución o facilitación de malware.'
+      },
+      {
+        q: '2. ¿Cuál de los siguientes delitos informáticos está más relacionado con el artículo 264.2 del Código Penal?',
+        options: ['Suplantación de identidad.', 'Ataques de denegación de servicio (DDoS).', 'Estafa por phishing.'],
+        correct: 1,
+        explain: 'El 264.2 se relaciona con ataques que inhabilitan servicios o sistemas, como un DDoS.'
+      },
+      {
+        q: '3. ¿Qué elemento biométrico no se suele utilizar en la autenticación de usuarios?',
+        options: ['Huella dactilar.', 'Iris.', 'Grupo sanguíneo.'],
+        correct: 2,
+        explain: 'Huella e iris sí se usan; el grupo sanguíneo no es un mecanismo habitual de autenticación.'
+      },
+      {
+        q: '4. ¿Cuál es el objetivo del artículo 278 del Código Penal?',
+        options: ['Proteger la intimidad personal.', 'Castigar el espionaje industrial.', 'Penalizar el sabotaje informático.'],
+        correct: 1,
+        explain: 'El artículo 278 protege los secretos empresariales y castiga el espionaje industrial.'
+      },
+      {
+        q: '5. ¿Qué artículo del CP sanciona la revelación de secretos personales por un profesional?',
+        options: ['Art. 199.2.', 'Art. 264.', 'Art. 278.'],
+        correct: 0,
+        explain: 'El artículo 199.2 castiga la revelación de secretos por parte de un profesional obligado a reserva.'
+      },
+      {
+        q: '6. ¿Qué tipo de licencia permite modificar y redistribuir software manteniendo sus condiciones originales?',
+        options: ['Retail.', 'OEM.', 'GPL (licencia pública general).'],
+        correct: 2,
+        explain: 'La GPL permite modificar y redistribuir software manteniendo la misma licencia.'
+      },
+      {
+        q: '7. ¿Qué ley regula el comercio electrónico en España?',
+        options: ['LSSI/LSSICE (34/2002).', 'Ley de Firma Electrónica.', 'LOPDGDD.'],
+        correct: 0,
+        explain: 'La Ley 34/2002, conocida como LSSI o LSSICE, regula servicios de la sociedad de la información y comercio electrónico.'
+      },
+      {
+        q: '8. ¿Cuál es el principal objetivo de la Ley Orgánica 3/2018 (LOPDGDD)?',
+        options: ['Regular la propiedad intelectual.', 'Penalizar la suplantación de identidad.', 'Adaptar el RGPD al marco español.'],
+        correct: 2,
+        explain: 'La LOPDGDD adapta el RGPD al ordenamiento español y añade derechos digitales.'
+      },
+      {
+        q: '9. ¿Qué artículo del Código Penal regula el delito de estafa informática?',
+        options: ['Art. 248.2.', 'Art. 197.', 'Art. 270.'],
+        correct: 0,
+        explain: 'El artículo 248.2 regula la estafa informática.'
+      },
+      {
+        q: '10. ¿Qué tipo de ataque redirige al usuario a una página falsa aunque escriba la dirección correcta?',
+        options: ['Spoofing.', 'Phishing.', 'Pharming.'],
+        correct: 2,
+        explain: 'El pharming redirige a webs falsas incluso aunque la víctima escriba la dirección correcta.'
+      },
+      {
+        q: '11. ¿Cuál de los siguientes artículos del CP está relacionado con el uso no autorizado de wifi ajeno?',
+        options: ['Art. 278.', 'Art. 270.', 'Art. 256.'],
+        correct: 2,
+        explain: 'El artículo 256 se relaciona con el uso indebido de equipamientos o telecomunicaciones.'
+      },
+      {
+        q: '12. ¿Qué institución vela por el cumplimiento de la LOPDGDD en España?',
+        options: ['Ministerio del Interior.', 'Agencia Española de Protección de Datos (AEPD).', 'Consejo General del Poder Judicial.'],
+        correct: 1,
+        explain: 'La AEPD es la autoridad de control en materia de protección de datos en España.'
+      },
+      {
+        q: '13. ¿Qué derechos garantizaba la antigua LOPD (15/1999)?',
+        options: ['Honor, privacidad y desconexión.', 'Acreditación, limitación, supresión.', 'Acceso, rectificación, cancelación y oposición (ARCO).'],
+        correct: 2,
+        explain: 'La antigua LOPD reconocía los derechos ARCO.'
+      },
+      {
+        q: '14. ¿Cuál es el nombre de la técnica que manipula psicológicamente a los usuarios para obtener información?',
+        options: ['Ransomware.', 'Ingeniería social.', 'Criptojacking.'],
+        correct: 1,
+        explain: 'La ingeniería social busca manipular a la víctima para que revele información o actúe como el atacante quiere.'
+      },
+      {
+        q: '15. ¿Qué tipo de software se utiliza para registrar lo que escribe el usuario en el teclado?',
+        options: ['Troyano.', 'Keylogger.', 'Sniffer.'],
+        correct: 1,
+        explain: 'Un keylogger registra las pulsaciones del teclado.'
+      },
+      {
+        q: '16. ¿Qué artículo del Código Penal se asocia al acceso no autorizado a sistemas informáticos?',
+        options: ['Art. 197 bis.', 'Art. 286.', 'Art. 390.'],
+        correct: 0,
+        explain: 'El artículo 197 bis castiga el acceso no autorizado a sistemas e interceptación de comunicaciones.'
+      },
+      {
+        q: '17. ¿Cuál de las siguientes opciones describe mejor un dato personal?',
+        options: ['Solo el DNI y el nombre.', 'Cualquier información que identifique o pueda identificar a una persona.', 'Solo los datos médicos y bancarios.'],
+        correct: 1,
+        explain: 'Dato personal es cualquier información que identifique o haga identificable a una persona, incluso una IP en muchos casos.'
+      },
+      {
+        q: '18. ¿Cuál de estos datos tiene protección especial?',
+        options: ['Nombre del usuario.', 'Color favorito.', 'Datos de salud.'],
+        correct: 2,
+        explain: 'Los datos de salud forman parte de las categorías especialmente protegidas.'
+      },
+      {
+        q: '19. ¿Qué requisito debe cumplir el consentimiento según el RGPD?',
+        options: ['Puede ser tácito si el usuario no protesta.', 'Debe ser libre, específico, informado e inequívoco.', 'Solo vale en papel firmado.'],
+        correct: 1,
+        explain: 'El RGPD exige consentimiento libre, específico, informado e inequívoco.'
+      },
+      {
+        q: '20. ¿En cuánto tiempo debe notificarse una brecha de datos a la autoridad de control si hay riesgo para las personas?',
+        options: ['24 horas.', '72 horas.', '7 días.'],
+        correct: 1,
+        explain: 'La notificación debe hacerse en 72 horas desde que se conoce la violación de seguridad.'
+      },
+      {
+        q: '21. ¿Cuál de estos derechos fue añadido o reforzado por el RGPD?',
+        options: ['Portabilidad de los datos.', 'Derecho de huelga.', 'Tutela judicial.'],
+        correct: 0,
+        explain: 'El RGPD reforzó, entre otros, el derecho a la portabilidad.'
+      },
+      {
+        q: '22. ¿Qué figura decide la finalidad y los medios del tratamiento de datos?',
+        options: ['Encargado del tratamiento.', 'Responsable del tratamiento.', 'Delegado de protección de datos.'],
+        correct: 1,
+        explain: 'El responsable del tratamiento decide para qué y cómo se tratan los datos.'
+      },
+      {
+        q: '23. ¿Qué figura trata datos personales por cuenta del responsable?',
+        options: ['Encargado del tratamiento.', 'Juez instructor.', 'Autoridad de certificación.'],
+        correct: 0,
+        explain: 'El encargado del tratamiento trata los datos en nombre del responsable.'
+      },
+      {
+        q: '24. ¿Qué propiedad NO garantiza por sí sola una firma digital?',
+        options: ['Autenticidad.', 'Integridad.', 'Confidencialidad.'],
+        correct: 2,
+        explain: 'La firma digital garantiza autenticidad, integridad y no repudio, pero no confidencialidad por sí sola.'
+      },
+      {
+        q: '25. ¿Qué ley regula específicamente la firma electrónica en España?',
+        options: ['Ley 59/2003.', 'Ley 34/2002.', 'Ley 25/2007.'],
+        correct: 0,
+        explain: 'La Ley 59/2003 regula la firma electrónica en España.'
+      },
+      {
+        q: '26. ¿Qué afirmación es correcta sobre las redes P2P?',
+        options: ['Son ilegales por definición.', 'Permiten que cada nodo actúe como cliente y servidor.', 'Solo sirven para compartir software pirata.'],
+        correct: 1,
+        explain: 'En redes P2P cada nodo puede actuar como cliente y servidor. Lo ilegal puede ser el uso concreto que se haga.'
+      },
+      {
+        q: '27. ¿Qué artículo del CP se relaciona con la propiedad intelectual?',
+        options: ['Art. 270.', 'Art. 256.', 'Art. 172 ter.'],
+        correct: 0,
+        explain: 'El artículo 270 castiga conductas contra la propiedad intelectual.'
+      },
+      {
+        q: '28. ¿Qué buena práctica es correcta al configurar un cliente de correo?',
+        options: ['Usar el mismo correo para todo.', 'Guardar siempre las contraseñas en el navegador.', 'Usar cuentas separadas para trabajo y asuntos personales.'],
+        correct: 2,
+        explain: 'Separar cuentas ayuda a proteger la privacidad y a ordenar mejor la información.'
+      },
+      {
+        q: '29. ¿Qué tecnología cifra el contenido del correo para que solo el destinatario pueda leerlo?',
+        options: ['PGP o S/MIME.', 'Solo TLS.', 'DHCP.'],
+        correct: 0,
+        explain: 'PGP y S/MIME cifran el contenido del mensaje; TLS suele proteger la conexión.'
+      },
+      {
+        q: '30. ¿Cuál es la autoridad de control autonómica que NO existe actualmente según el tema?',
+        options: ['Autoridad Catalana de Protección de Datos.', 'Agencia Vasca de Protección de Datos.', 'Agencia de Protección de Datos de la Comunidad de Madrid.'],
+        correct: 2,
+        explain: 'La agencia madrileña fue suprimida; siguen existiendo la catalana, la vasca y la andaluza.'
+      }
+    ];
+
+    const quizContainer = document.getElementById('quizContainer');
+    const correctCountEl = document.getElementById('correctCount');
+    const totalCountEl = document.getElementById('totalCount');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let score = 0;
+    const answeredCorrect = new Set();
+
+    function renderQuiz() {
+      quizContainer.innerHTML = '';
+      totalCountEl.textContent = questions.length;
+
+      questions.forEach((item, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'question';
+
+        const title = document.createElement('p');
+        title.textContent = item.q;
+        wrapper.appendChild(title);
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options';
+
+        item.options.forEach((option, i) => {
+          const label = document.createElement('label');
+          label.innerHTML = `<input type="radio" name="q${index}" value="${i}"> ${option}`;
+          optionsDiv.appendChild(label);
+        });
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = 'Comprobar';
+
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback';
+
+        button.addEventListener('click', () => {
+          const selected = wrapper.querySelector(`input[name="q${index}"]:checked`);
+          if (!selected) {
+            feedback.className = 'feedback bad';
+            feedback.innerHTML = 'Debes marcar una opción antes de comprobar.';
+            return;
+          }
+
+          const value = Number(selected.value);
+          if (value === item.correct) {
+            feedback.className = 'feedback ok';
+            feedback.innerHTML = `<strong>Correcto.</strong> ${item.explain}`;
+            if (!answeredCorrect.has(index)) {
+              answeredCorrect.add(index);
+              score++;
+            }
+          } else {
+            feedback.className = 'feedback bad';
+            feedback.innerHTML = `<strong>Incorrecto.</strong> La correcta es <strong>${String.fromCharCode(97 + item.correct)}) ${item.options[item.correct]}</strong>. ${item.explain}`;
+          }
+          correctCountEl.textContent = score;
+        });
+
+        wrapper.appendChild(optionsDiv);
+        wrapper.appendChild(button);
+        wrapper.appendChild(feedback);
+        quizContainer.appendChild(wrapper);
+      });
+    }
+
+    resetBtn.addEventListener('click', () => {
+      score = 0;
+      answeredCorrect.clear();
+      correctCountEl.textContent = '0';
+      renderQuiz();
+      window.scrollTo({ top: document.getElementById('test').offsetTop - 80, behavior: 'smooth' });
+    });
+
+    renderQuiz();
+  </script>
+</body>
+</html>

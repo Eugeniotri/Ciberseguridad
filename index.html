@@ -107,21 +107,12 @@
       padding: 60px 0;
     }
 
-    .grid,
     .units {
       display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 20px;
     }
 
-    .grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .units {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .card,
     .unit-card {
       background: var(--card);
       padding: 20px;
@@ -172,9 +163,8 @@
         <a class="btn btn-primary" href="#unidades">Ver unidades</a>
 
         <div style="margin-top:15px;">
-          Empieza por <b>UF1</b>, repasa <b>UF2</b>, estudia <b>UF3</b>, entra en <b>UF4</b>, añade <b>UF5</b> para
-          reforzar redes, firewalls y proxies, continúa con <b>UF6</b> y termina con <b>UF7</b> para privacidad y
-          criptografía.
+          Empieza por <b>UF1</b>, repasa <b>UF2</b>, estudia <b>UF3</b>, entra en <b>UF4</b>, añade <b>UF5</b>,
+          continúa con <b>UF6</b>, sigue con <b>UF7</b> y termina con <b>UF8</b> (legislación).
         </div>
       </div>
 
@@ -187,7 +177,8 @@
             <span class="ok">UF4</span>,
             <span class="ok">UF5</span>,
             <span class="ok">UF6</span>,
-            <span class="ok">UF7</span>
+            <span class="ok">UF7</span>,
+            <span class="ok">UF8</span>
           </div>
 
           <div class="line"><span class="accent">&gt;</span> páginas disponibles:
@@ -197,7 +188,8 @@
             <span class="ok">uf4.html</span>,
             <span class="ok">uf5.html</span>,
             <span class="ok">uf6.html</span>,
-            <span class="ok">uf7.html</span>
+            <span class="ok">uf7.html</span>,
+            <span class="ok">uf8.html</span>
           </div>
 
           <div class="line"><span class="accent">&gt;</span> modo estudio:
@@ -217,102 +209,60 @@
 
         <div class="units">
 
-          <!-- UF1 -->
           <article class="unit-card">
             <span class="unit-tag">UF1</span>
             <span class="status">Disponible</span>
-
             <h3>Seguridad física y lógica</h3>
-
             <a class="btn btn-secondary" href="uf1.html">Ir a UF1</a>
           </article>
 
-          <!-- UF2 -->
           <article class="unit-card">
             <span class="unit-tag">UF2</span>
             <span class="status">Disponible</span>
-
             <h3>Almacenamiento</h3>
-
             <a class="btn btn-secondary" href="uf2.html">Ir a UF2</a>
           </article>
 
-          <!-- UF3 -->
           <article class="unit-card">
             <span class="unit-tag">UF3</span>
             <span class="status">Disponible</span>
-
             <h3>Copias de seguridad</h3>
-
             <a class="btn btn-secondary" href="uf3.html">Ir a UF3</a>
           </article>
 
-          <!-- UF4 -->
           <article class="unit-card">
             <span class="unit-tag">UF4</span>
             <span class="status">Disponible</span>
-
             <h3>Seguridad activa y malware</h3>
-
-            <ul>
-              <li>Seguridad activa</li>
-              <li>Incidentes y contingencia</li>
-              <li>Malware completo</li>
-              <li>Quiz interactivo</li>
-            </ul>
-
             <a class="btn btn-secondary" href="uf4.html">Ir a UF4</a>
           </article>
 
-          <!-- UF5 -->
           <article class="unit-card">
             <span class="unit-tag">UF5</span>
             <span class="status">Disponible</span>
-
-            <h3>Seguridad en redes, cortafuegos y proxy</h3>
-
-            <ul>
-              <li>Seguridad de red</li>
-              <li>Cortafuegos en equipos y servidores</li>
-              <li>Proxy y seguridad en redes</li>
-              <li>Resumen + quiz interactivo</li>
-            </ul>
-
+            <h3>Seguridad en redes</h3>
             <a class="btn btn-secondary" href="uf5.html">Ir a UF5</a>
           </article>
 
-          <!-- UF6 -->
           <article class="unit-card">
             <span class="unit-tag">UF6</span>
             <span class="status">Disponible</span>
-
-            <h3>Aseguramiento de la privacidad</h3>
-
-            <ul>
-              <li>Privacidad y protección de datos</li>
-              <li>Firewalls, IDS e IPS</li>
-              <li>Redes wifi y segmentación</li>
-              <li>Ataques e ingeniería social</li>
-            </ul>
-
+            <h3>Privacidad</h3>
             <a class="btn btn-secondary" href="uf6.html">Ir a UF6</a>
           </article>
 
-          <!-- UF7 -->
           <article class="unit-card">
             <span class="unit-tag">UF7</span>
             <span class="status">Disponible</span>
-
             <h3>Criptografía</h3>
-
-            <ul>
-              <li>Criptografía clásica</li>
-              <li>Cifrado simétrico y asimétrico</li>
-              <li>Hash, firma digital y PKI</li>
-              <li>Resumen + quiz interactivo</li>
-            </ul>
-
             <a class="btn btn-secondary" href="uf7.html">Ir a UF7</a>
+          </article>
+
+          <article class="unit-card">
+            <span class="unit-tag">UF8</span>
+            <span class="status">Disponible</span>
+            <h3>Legislación</h3>
+            <a class="btn btn-secondary" href="uf8.html">Ir a UF8</a>
           </article>
 
         </div>
